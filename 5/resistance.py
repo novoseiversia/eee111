@@ -7,7 +7,7 @@ from typing import List
 
 
 
-valid_colors = ["black", "brown", "red", "orange", "yellow", "green", "blue", "violet", "gray", "white", "gold", "silver"]
+valid_colors = ["black", "brown", "red", "orange", "yellow", "green", "blue", "violet", "grey", "white", "gold", "silver"]
 
 def color(s: str) -> str:
 	lower_s = s.lower()
