@@ -4,10 +4,10 @@
 
 
 def is_anagram(a: str, b: str) -> bool:
-	sorted_a = sorted(a.lower())
-	sorted_b = sorted(b.lower())
+	sorted_lower_a = sorted(a.lower())
+	sorted_lower_b = sorted(b.lower())
 
-	return sorted_a == sorted_b
+	return sorted_lower_a == sorted_lower_b
 
 
 
