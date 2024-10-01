@@ -29,17 +29,17 @@ def input_list_colors(prompt: str) -> List[str]:
 
 
 
-def get_band_digit(color: str) -> int:
+def get_band_digit(color: str) -> int | None:
 	digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, None, None]
 	band_digits = dict(zip(valid_colors, digits, strict = True))
 	return band_digits[color]
 
-def get_band_multiplier(color: str) -> float:
+def get_band_multiplier(color: str) -> float | None:
 	exponents = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -1, -2]
 	band_exponents = dict(zip(valid_colors, exponents, strict = True))
 	return 10**band_exponents[color]
 
-def get_band_tolerance(color: str) -> float:
+def get_band_tolerance(color: str) -> float | None:
 	tolerances = [None, 1, 2, 3, 4, 0.5, 0.25, 0.10, 0.05, None, 5, 10]
 	band_tolerances = dict(zip(valid_colors, tolerances, strict = True))
 	return band_tolerances[color]
