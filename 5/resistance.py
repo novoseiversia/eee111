@@ -44,6 +44,25 @@ def get_band_tolerance(color: str) -> float:
 	band_tolerances = dict(zip(valid_colors, tolerances, strict = True))
 	return band_tolerances[color]
 
+def get_resistance_from_colors(colors: List[str]) -> str:
+	first_digit  = get_band_digit(colors[0])
+	second_digit = get_band_digit(colors[1])
+	multiplier   = get_band_multiplier(colors[2])
+	tolerance    = get_band_tolerance(colors[3])
+
+	if first_digit == None:
+		return f"Invalid first digit color \"{ colors[0] }\""
+	if second_digit == None:
+		return f"Invalid second digit color \"{ colors[1] }\""
+	if multiplier == None:
+		return f"Invalid multiplier color \"{ colors[2] }\""
+	if tolerance == None:
+		return f"Invalid tolerance color \"{ colors[3] }\""
+
+	resistance = (10 * first_digit + second_digit) * multiplier
+
+	return f"{ resistance } +/- { tolerance }%"
+
 
 
 def __main__():
@@ -53,31 +72,9 @@ def __main__():
 		print("Please enter a color combination for a 4-band resistor.")
 		return
 
-	first_digit  = get_band_digit(colors[0])
-	second_digit = get_band_digit(colors[1])
-	multiplier   = get_band_multiplier(colors[2])
-	tolerance    = get_band_tolerance(colors[3])
+	resistance = get_resistance_from_colors(colors)
 
-	error = False
-
-	if first_digit == None:
-		print(f"Invalid first digit color \"{ colors[0] }\"")
-		error = True
-	if second_digit == None:
-		print(f"Invalid second digit color \"{ colors[1] }\"")
-		error = True
-	if multiplier == None:
-		print(f"Invalid multiplier color \"{ colors[2] }\"")
-		error = True
-	if tolerance == None:
-		print(f"Invalid tolerance color \"{ colors[3] }\"")
-		error = True
-	if error:
-		return
-
-	resistance = (10 * first_digit + second_digit) * multiplier
-
-	print(f"{ resistance } +/- { tolerance }%")
+	print(resistance)
 
 
 
