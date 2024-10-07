@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: 0BSD
 
 from enum import Enum
-from typing import Any, List
+from typing import Any, List, Self
 
 
 
@@ -14,6 +14,9 @@ class CommandType(Enum):
 	EXIT       =  4,
 	INVALID    = -1,
 
+	def make(self, *args: Any) -> tuple[Self, List[Any]]:
+		return (type, list(args))
+
 
 
 def input_list(prompt: str) -> List[str]:
@@ -21,17 +24,17 @@ def input_list(prompt: str) -> List[str]:
 
 def parse_args(command: List[str]) -> tuple[CommandType, List[Any]]:
 	if command[1] == "needed_now":
-		return (CommandType.NEEDED_NOW, [command[0]])
+		return CommandType.NEEDED_NOW.make(command[0])
 	elif command[1] == "needed_in":
-		return (CommandType.NEEDED_IN, [command[0], command[2]])
+		return CommandType.NEEDED_IN.make(command[0], command[2])
 	elif command[1] == "runs_out":
-		return (CommandType.RUNS_OUT, [command[0]])
+		return CommandType.RUNS_OUT.make(command[0])
 	elif command[2] == "run_outs":
-		return (CommandType.RUN_OUTS, [command[0], command[1]])
+		return CommandType.RUN_OUTS.make(command[0], command[1])
 	elif command[0] == "exit":
-		return (CommandType.EXIT, [])
+		return CommandType.EXIT.make()
 	else:
-		return (CommandType.INVALID, [])
+		return CommandType.INVALID.make()
 
 
 
