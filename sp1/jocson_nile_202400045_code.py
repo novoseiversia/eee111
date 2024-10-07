@@ -31,7 +31,7 @@ def parse_command(command: List[str]) -> tuple[CommandType, List[Any]]:
 	elif command[0] == "exit":
 		return (CommandType.EXIT, [])
 	else:
-		return (CommandType.INVALID)
+		return (CommandType.INVALID, [])
 
 
 
