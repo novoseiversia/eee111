@@ -117,7 +117,6 @@ def parse_database(filename: str) -> dict[str, tuple[int, int]]:
 			line.split(",")
 		):
 			deserialized[parsed[0]] = (parsed[1], parsed[2])
-
 		else:
 			raise RuntimeError("Invalid hospital supply database format.")
 
@@ -129,23 +128,6 @@ def remove_extension(filename: str) -> str:
 	return path.splitext(filename)[0]
 
 
-
-def needed_now(name: str, database: dict[str, tuple[int, int]]) -> None:
-	print(f"Needed Items now for { name }:")
-	for item, (quantity, daily_usage) in database.items():
-		if quantity >= daily_usage:
-			continue
-		else:
-			print(f"{ daily_usage - quantity } x { item }")
-
-def needed_in(name: str, database: dict[str, tuple[int, int]], days: int) -> None:
-	print(f"Needed Items in { days } day/s for { name }:")
-	for item, (quantity, daily_usage) in database.items():
-		needed = daily_usage * days
-		if quantity >= needed:
-			continue
-		else:
-			print(f"{ needed - quantity } x { item }")
 
 def get_sorted_days_shortage(database: dict[str, tuple[int, int]]) -> List[tuple]:
 	days_shortage = {}
@@ -159,18 +141,37 @@ def get_sorted_days_shortage(database: dict[str, tuple[int, int]]) -> List[tuple
 
 	return sort_days
 
+
+
+def needed_now(name: str, database: dict[str, tuple[int, int]]) -> None:
+	print(f"Needed Items now for { name }:")
+
+	for item, (quantity, daily_usage) in database.items():
+		if quantity >= daily_usage:
+			continue
+		else:
+			print(f"{ daily_usage - quantity } x { item }")
+
+def needed_in(name: str, database: dict[str, tuple[int, int]], days: int) -> None:
+	print(f"Needed Items in { days } day/s for { name }:")
+
+	for item, (quantity, daily_usage) in database.items():
+		needed = daily_usage * days
+		if quantity >= needed:
+			continue
+		else:
+			print(f"{ needed - quantity } x { item }")
+
 def runs_out(name: str, database: dict[str, tuple[int, int]]) -> None:
 	print(f"For { name }:")
 
 	days_shortage = get_sorted_days_shortage(database)
-
 	print(f"{ days_shortage[0][0] } will run out in { days_shortage[0][1][0] } day/s")
 
 def run_outs(name: str, database: dict[str, tuple[int, int]], n_items: int) -> None:
 	print(f"For { name }:")
 
 	days_shortage = get_sorted_days_shortage(database)
-
 	for item in days_shortage[:n_items]:
 		print(f"{ item[0] } will run out in { item[1][0] } day/s")
 
