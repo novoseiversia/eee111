@@ -103,6 +103,7 @@ def parse_database(filename: str) -> dict[str, tuple[int, int]]:
 		else:
 			raise RuntimeError("Invalid hospital supply database format.")
 
+
 	return deserialized
 
 def remove_extension(filename: str) -> str:
@@ -117,7 +118,8 @@ def get_sorted_days_shortage(database: dict[str, tuple[int, int]]) -> List[tuple
 		shortage = daily_usage * runs_out_in - quantity
 		days_shortage[item] = (runs_out_in, shortage)
 
-	sort_shortage = sorted(days_shortage.items(), key=lambda kv: kv[1][1], reverse=True)
+	sort_name     = sorted(days_shortage.items(), key=lambda kv: kv[0])
+	sort_shortage = sorted(sort_name, key=lambda kv: kv[1][1], reverse=True)
 	sort_days     = sorted(sort_shortage, key=lambda kv: kv[1][0])
 
 	return sort_days
