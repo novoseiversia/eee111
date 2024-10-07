@@ -27,7 +27,7 @@ class CommandType(Enum):
 
 
 def input_list(prompt: str) -> List[str]:
-	return [s for s in input(prompt).split()]
+	return input(prompt).split()
 
 
 
