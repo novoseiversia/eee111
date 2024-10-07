@@ -7,8 +7,8 @@ from typing import Any, List
 
 
 class CommandType(Enum):
-	NEEDED_IN  =  0,
-	NEEDED_NOW =  1,
+	NEEDED_NOW =  0,
+	NEEDED_IN  =  1,
 	RUNS_OUT   =  2,
 	RUN_OUTS   =  3,
 	EXIT       =  4,
