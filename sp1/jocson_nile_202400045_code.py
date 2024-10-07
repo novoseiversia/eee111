@@ -22,8 +22,6 @@ class CommandType(Enum):
 				return member
 		return cls.INVALID
 
-type Command = tuple[CommandType, List[Any]]
-
 
 
 def input_list(prompt: str) -> List[str]:
@@ -58,7 +56,7 @@ def parse_rules(
 
 
 
-def parse_args(command: List[str]) -> Command:
+def parse_args(command: List[str]) -> List[Any]:
 	if command[1] == "needed_now":
 		return CommandType.NEEDED_NOW.make(command[0])
 	elif command[1] == "needed_in":
