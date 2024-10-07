@@ -112,7 +112,7 @@ def parse_database(filename: str) -> dict[str, tuple[int, int]]:
 		if parsed := parse_rules(
 			[str, int, int],
 			[0, 1, 2],
-			line.split()
+			line.split(",")
 		):
 			deserialized[parsed[0]] = (parsed[1], parsed[2])
 
