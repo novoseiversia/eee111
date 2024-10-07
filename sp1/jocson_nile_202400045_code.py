@@ -40,6 +40,8 @@ def parse_rules(
 		if isinstance(rule, str):
 			if not isinstance(arg, str):
 				return None
+			if rule != arg:
+				return None
 			else:
 				parsed_args.append(arg)
 		else:
