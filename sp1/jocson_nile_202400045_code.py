@@ -64,46 +64,31 @@ def parse_rules(
 
 	return output_args
 
+def parse_rules_any(
+		rules: List[tuple[List[type | str], List[int | tuple[int | type]]]],
+		args: List[str],
+		default: List[Any]
+) -> List[Any]:
+	for input_rules, output_rules in rules:
+		if parsed := parse_rules(input_rules, output_rules, args):
+			return parsed
+
+	return default
+
 
 
 def parse_args(command: List[str]) -> List[Any]:
-	if parsed := parse_rules(
-		[str, "needed_now"],
-		[(1, CommandType), 0],
-		command
-	):
-		return parsed
+	needed_now_rules = ([str, "needed_now"], [(1, CommandType), 0])
+	needed_in_rules  = ([str, "needed_in", int], [(1, CommandType), 0, 2])
+	runs_out_rules   = ([str, "runs_out"], [(1, CommandType), 0])
+	run_outs_rules   = ([str, int, "run_outs"], [(2, CommandType), 0, 1])
+	exit_rules       = (["exit"], [(0, CommandType)])
 
-	elif parsed := parse_rules(
-		[str, "needed_in", int],
-		[(1, CommandType), 0, 2],
-		command
-	):
-		return parsed
-
-	elif parsed := parse_rules(
-		[str, "runs_out"],
-		[(1, CommandType), 0],
-		command
-	):
-		return parsed
-
-	elif parsed := parse_rules(
-		[str, int, "run_outs"],
-		[(2, CommandType), 0, 1],
-		command
-	):
-		return parsed
-
-	elif parsed := parse_rules(
-		["exit"],
-		[(0, CommandType)],
-		command
-	):
-		return parsed
-
-	else:
-		return [CommandType.INVALID]
+	return parse_rules_any(
+		[needed_now_rules, needed_in_rules, runs_out_rules, run_outs_rules, exit_rules],
+		command,
+		[CommandType.INVALID]
+	)
 
 
 
