@@ -24,6 +24,8 @@ class CommandType(Enum):
 				return member
 		return cls.INVALID
 
+
+
 type InputRules = list[type | str]
 type OutputRules = list[int | tuple[int, type]]
 type RuleSet = tuple[InputRules, OutputRules]
@@ -141,6 +143,8 @@ def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
 			continue
 		else:
 			print(f"{ needed - quantity } x { item }")
+
+
 
 def runs_out(name: str, database: SupplyDatabase) -> None:
 	print(f"For { name }:")
