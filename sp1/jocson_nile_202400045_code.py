@@ -103,7 +103,6 @@ def parse_database(filename: str) -> dict[str, tuple[int, int]]:
 		else:
 			raise RuntimeError("Invalid hospital supply database format.")
 
-
 	return deserialized
 
 def remove_extension(filename: str) -> str:
