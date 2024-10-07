@@ -1,8 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (C) Nile Jocson <novoseiversia@gmail.com>
 # SPDX-License-Identifier: 0BSD
 
-from typing import List
-
 
 
 def input_int(prompt: str, *, noexcept: bool = False) -> int:
@@ -24,7 +22,7 @@ def prime(x: int) -> bool:
 			return False
 	return True
 
-def nprimes(n: int) -> List[int]:
+def nprimes(n: int) -> list[int]:
 	x = 2
 	primes = []
 	while len(primes) < n:

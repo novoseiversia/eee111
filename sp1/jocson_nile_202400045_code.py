@@ -4,7 +4,7 @@
 from enum import Enum
 from math import ceil
 from os import path
-from typing import Any, List
+from typing import Any
 
 
 
@@ -26,16 +26,16 @@ class CommandType(Enum):
 
 
 
-def input_list(prompt: str) -> List[str]:
+def input_list(prompt: str) -> list[str]:
 	return input(prompt).split()
 
 
 
 def parse_rules(
-		input_rules: List[type | str],
-		output_rules: List[int | tuple[int, type]],
-		args: List[str]
-) -> List[Any] | None:
+		input_rules: list[type | str],
+		output_rules: list[int | tuple[int, type]],
+		args: list[str]
+) -> list[Any] | None:
 
 	if len(args) != len(input_rules):
 		return None
@@ -65,17 +65,17 @@ def parse_rules(
 	return output_args
 
 def parse_rules_any(
-		rules: List[tuple[List[type | str], List[int | tuple[int | type]]]],
-		args: List[str],
-		default: List[Any]
-) -> List[Any]:
+		rules: list[tuple[list[type | str], list[int | tuple[int | type]]]],
+		args: list[str],
+		default: list[Any]
+) -> list[Any]:
 	for input_rules, output_rules in rules:
 		if parsed := parse_rules(input_rules, output_rules, args):
 			return parsed
 
 	return default
 
-def parse_args(command: List[str]) -> List[Any]:
+def parse_args(command: list[str]) -> list[Any]:
 	needed_now_rules = ([str, "needed_now"], [(1, CommandType), 0])
 	needed_in_rules  = ([str, "needed_in", int], [(1, CommandType), 0, 2])
 	runs_out_rules   = ([str, "runs_out"], [(1, CommandType), 0])
@@ -110,7 +110,7 @@ def remove_extension(filename: str) -> str:
 
 
 
-def get_sorted_days_shortage(database: dict[str, tuple[int, int]]) -> List[tuple]:
+def get_sorted_days_shortage(database: dict[str, tuple[int, int]]) -> list[tuple]:
 	days_shortage = {}
 	for item, (quantity, daily_usage) in database.items():
 		runs_out_in = ceil(quantity / daily_usage)

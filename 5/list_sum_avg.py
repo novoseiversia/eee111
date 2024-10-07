@@ -1,11 +1,9 @@
 # SPDX-FileCopyrightText: Copyright (C) Nile Jocson <novoseiversia@gmail.com>
 # SPDX-License-Identifier: 0BSD
 
-from typing import List
 
 
-
-def input_list_int(prompt: str) -> List[int]:
+def input_list_int(prompt: str) -> list[int]:
 	while True:
 		try:
 			parsed = [int(s) for s in input(prompt).split()]
@@ -16,13 +14,13 @@ def input_list_int(prompt: str) -> List[int]:
 
 
 
-def sum_integers(integers: List[int]) -> int:
+def sum_integers(integers: list[int]) -> int:
 	accum = 0
 	for i in integers:
 		accum += i
 	return accum
 
-def avg_integers(integers: List[int]) -> int:
+def avg_integers(integers: list[int]) -> int:
 	return sum_integers(integers) / len(integers)
 
 

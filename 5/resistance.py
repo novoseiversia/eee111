@@ -3,10 +3,6 @@
 
 
 
-from typing import List
-
-
-
 valid_colors = ["black", "brown", "red", "orange", "yellow", "green", "blue", "violet", "grey", "white", "gold", "silver"]
 
 def color(s: str) -> str:
@@ -38,7 +34,7 @@ def color(s: str) -> str:
 
 
 
-def input_list_colors(prompt: str) -> List[str]:
+def input_list_colors(prompt: str) -> list[str]:
 	"""
 	Asks the user for a space separated list of colors. Repeats until a valid input is received.
 
@@ -49,7 +45,7 @@ def input_list_colors(prompt: str) -> List[str]:
 
 	Returns
 	-------
-	List[str]
+	list[str]
 		A list of strings of colors.
 		A color must be one of: black, brown, red, orange, yellow, green, blue, violet, grey, white, gold, silver
 	"""
@@ -128,13 +124,13 @@ def get_band_tolerance(color: str) -> float | None:
 	band_tolerances = dict(zip(valid_colors, tolerances, strict = True))
 	return band_tolerances[color]
 
-def get_resistance_from_colors(colors: List[str]) -> str:
+def get_resistance_from_colors(colors: list[str]) -> str:
 	"""
 	Calculates the resistance of a given 4-band resistor by its color bands.
 
 	Parameters
 	----------
-	colors: List[str]
+	colors: list[str]
 		The color bands.
 		A color must be one of: black, brown, red, orange, yellow, green, blue, violet, grey, white, gold, silver
 
