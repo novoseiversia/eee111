@@ -123,17 +123,17 @@ def remove_extension(filename: str) -> str:
 
 
 def get_sorted_remaining_days_deficit(database: SupplyDatabase) -> list[RemainingInfo]:
-	remaining_days_deficit: dict[str, tuple[int, int]] = {}
+	remaining_days_deficit: list[RemainingInfo] = []
 	for item, stock_info in database.items():
 		remaining_days = ceil(stock_info.quantity / stock_info.daily_usage)
 		deficit = stock_info.daily_usage * remaining_days - stock_info.quantity
-		remaining_days_deficit[item] = (remaining_days, deficit)
+		remaining_days_deficit.append(RemainingInfo(item, remaining_days, deficit))
 
-	sort_name     = sorted(remaining_days_deficit.items(), key=lambda kv: kv[0])
-	sort_shortage = sorted(sort_name, key=lambda kv: kv[1][1], reverse=True)
-	sort_days     = sorted(sort_shortage, key=lambda kv: kv[1][0])
+	sort_name    = sorted(remaining_days_deficit, key=lambda i: i.name)
+	sort_deficit = sorted(sort_name, key=lambda i: i.deficit, reverse=True)
+	sort_days    = sorted(sort_deficit, key=lambda i: i.remaining_days)
 
-	return [RemainingInfo(item, info[0], info[1]) for item, info in sort_days]
+	return sort_days
 
 
 
