@@ -24,6 +24,35 @@ type Command = tuple[CommandType, List[Any]]
 def input_list(prompt: str) -> List[str]:
 	return [s for s in input(prompt).split()]
 
+def parse_rules(
+		input_rules: List[type | str],
+		output_rules: List[int | tuple[int, type]],
+		args: List[str]
+) -> List[Any] | None:
+	if len(args) != len(input_rules):
+		return None
+
+	parsed_args = []
+	for rule, arg in zip(input_rules, args):
+		if isinstance(rule, str):
+			if not isinstance(arg, str):
+				return None
+			else:
+				parsed_args.append(arg)
+		else:
+			parsed_args.append(rule(arg))
+
+	output_args = []
+	for rule in output_rules:
+		if isinstance(rule, int):
+			output_args.append(parsed_args[rule])
+		else:
+			output_args.append(rule[1](parsed_args[rule[0]]))
+
+	return output_args
+
+
+
 def parse_args(command: List[str]) -> Command:
 	if command[1] == "needed_now":
 		return CommandType.NEEDED_NOW.make(command[0])
