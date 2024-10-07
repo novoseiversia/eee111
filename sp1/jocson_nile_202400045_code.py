@@ -17,12 +17,14 @@ class CommandType(Enum):
 	def make(self, *args: Any) -> tuple[Self, List[Any]]:
 		return (type, list(args))
 
+type Command = tuple[CommandType, List[Any]]
+
 
 
 def input_list(prompt: str) -> List[str]:
 	return [s for s in input(prompt).split]
 
-def parse_args(command: List[str]) -> tuple[CommandType, List[Any]]:
+def parse_args(command: List[str]) -> Command:
 	if command[1] == "needed_now":
 		return CommandType.NEEDED_NOW.make(command[0])
 	elif command[1] == "needed_in":
