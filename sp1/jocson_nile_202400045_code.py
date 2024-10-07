@@ -38,12 +38,7 @@ def input_list(prompt: str) -> list[str]:
 
 
 
-def parse_rules(
-		input_rules: InputRules,
-		output_rules: OutputRules,
-		args: list[str]
-) -> list[Any] | None:
-
+def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[str]) -> list[Any] | None:
 	if len(args) != len(input_rules):
 		return None
 
@@ -71,11 +66,7 @@ def parse_rules(
 
 	return output_args
 
-def parse_rules_any(
-		rules: RuleSet,
-		args: list[str],
-		default: list[Any]
-) -> list[Any]:
+def parse_rules_any(rules: RuleSet, args: list[str], default: list[Any]) -> list[Any]:
 	for input_rules, output_rules in rules:
 		if parsed := parse_rules(input_rules, output_rules, args):
 			return parsed
