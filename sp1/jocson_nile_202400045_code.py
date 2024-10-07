@@ -17,6 +17,14 @@ class CommandType(Enum):
 	def make(self, *args: Any) -> tuple[Self, List[Any]]:
 		return (self, list(args))
 
+	@classmethod
+	def _missing_(cls, value: object) -> Any:
+		value = value.upper()
+		for member in cls:
+			if member.name == value:
+				return member
+		return cls.INVALID
+
 type Command = tuple[CommandType, List[Any]]
 
 
