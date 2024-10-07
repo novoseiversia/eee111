@@ -166,7 +166,13 @@ def runs_out(name: str, database: dict[str, tuple[int, int]]) -> None:
 
 	print(f"{ days_shortage[0][0] } will run out in { days_shortage[0][1][0] } day/s")
 
+def run_outs(name: str, database: dict[str, tuple[int, int]], n_items: int) -> None:
+	print(f"For { name }:")
 
+	days_shortage = get_sorted_days_shortage(database)
+
+	for item in days_shortage[:n_items]:
+		print(f"{ item[0] } will run out in { item[1][0] } day/s")
 
 
 
@@ -180,6 +186,8 @@ def __main__():
 				needed_in(remove_extension(command[1]), parse_database(command[1]), command[2])
 			case CommandType.RUNS_OUT:
 				runs_out(remove_extension(command[1]), parse_database(command[1]))
+			case CommandType.RUN_OUTS:
+				run_outs(remove_extension(command[1]), parse_database(command[1]), command[2])
 			case CommandType.EXIT:
 				break
 
