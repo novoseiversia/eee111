@@ -18,7 +18,7 @@ class CommandType(Enum):
 
 	@classmethod
 	def _missing_(cls, value: object) -> Any:
-		value = value.upper()
+		value = str(value).upper()
 		for member in cls:
 			if member.name == value:
 				return member
@@ -65,7 +65,7 @@ def parse_rules(
 	return output_args
 
 def parse_rules_any(
-		rules: list[tuple[list[type | str], list[int | tuple[int | type]]]],
+		rules: list[tuple[list[type | str], list[int | tuple[int, type]]]],
 		args: list[str],
 		default: list[Any]
 ) -> list[Any]:
@@ -80,7 +80,7 @@ def parse_args(command: list[str]) -> list[Any]:
 	needed_in_rules  = ([str, "needed_in", int], [(1, CommandType), 0, 2])
 	runs_out_rules   = ([str, "runs_out"], [(1, CommandType), 0])
 	run_outs_rules   = ([str, int, "run_outs"], [(2, CommandType), 0, 1])
-	exit_rules       = (["exit"], [(0, CommandType)])
+	exit_rules: tuple[list[type | str], list[int | tuple[int, type]]] = (["exit"], [(0, CommandType)])
 
 	return parse_rules_any(
 		[needed_now_rules, needed_in_rules, runs_out_rules, run_outs_rules, exit_rules],

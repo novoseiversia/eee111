@@ -1,9 +1,11 @@
 # SPDX-FileCopyrightText: Copyright (C) Nile Jocson <novoseiversia@gmail.com>
 # SPDX-License-Identifier: 0BSD
 
+from typing import Optional
 
 
-def input_float(prompt: str, *, noexcept: bool = False) -> float:
+
+def input_float(prompt: str, *, noexcept: bool = False) -> Optional[float]:
 	while True:
 		try:
 			parsed = float(input(prompt))
@@ -17,7 +19,7 @@ def input_float(prompt: str, *, noexcept: bool = False) -> float:
 
 
 
-def root(x: float, n: float = 2) -> float:
+def nthroot(x: float, n: float = 2) -> float:
 	return x ** (1/n)
 
 
@@ -27,9 +29,10 @@ n = input_float("Input n (default: 2): ", noexcept = True)
 
 print("")
 
-if n == None:
-	root = root(x)
-	print(f"root({ x }) = { root }")
-else:
-	root = root(x, n)
-	print(f"root({ x }, { n }) = { root }")
+if x != None:
+	if n == None:
+		root = nthroot(x)
+		print(f"root({ x }) = { root }")
+	else:
+		root = nthroot(x, n)
+		print(f"root({ x }, { n }) = { root }")

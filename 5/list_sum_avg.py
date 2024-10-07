@@ -21,7 +21,7 @@ def sum_integers(integers: list[int]) -> int:
 	return accum
 
 def avg_integers(integers: list[int]) -> int:
-	return sum_integers(integers) / len(integers)
+	return int(sum_integers(integers) / len(integers))
 
 
 
