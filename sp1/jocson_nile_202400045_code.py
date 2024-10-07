@@ -137,6 +137,15 @@ def needed_now(name: str, database: dict[str, tuple[int, int]]) -> None:
 		else:
 			print(f"{ daily_usage - quantity } x { item }")
 
+def needed_in(name: str, database: dict[str, tuple[int, int]], days: int) -> None:
+	print(f"Needed Items in { days } day/s for { name }:")
+	for item, (quantity, daily_usage) in database.items():
+		needed = daily_usage * days
+		if quantity >= needed:
+			continue
+		else:
+			print(f"{ needed - quantity } x { item }")
+
 
 
 def __main__():
@@ -145,6 +154,8 @@ def __main__():
 		match command[0]:
 			case CommandType.NEEDED_NOW:
 				needed_now(remove_extension(command[1]), parse_database(command[1]))
+			case CommandType.NEEDED_IN:
+				needed_in(remove_extension(command[1]), parse_database(command[1]), command[2])
 			case CommandType.EXIT:
 				break
 
