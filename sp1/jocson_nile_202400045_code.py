@@ -105,7 +105,7 @@ def parse_args(command: List[str]) -> List[Any]:
 
 
 
-def parse_csv(filename: str) -> dict[str, tuple[int, int]]:
+def parse_database(filename: str) -> dict[str, tuple[int, int]]:
 	file = open(filename, "r")
 	deserialized = {}
 	for line in file:
@@ -117,7 +117,7 @@ def parse_csv(filename: str) -> dict[str, tuple[int, int]]:
 			deserialized[parsed[0]] = (parsed[1], parsed[2])
 
 		else:
-			raise RuntimeError("Invalid CSV format.")
+			raise RuntimeError("Invalid hospital supply database format.")
 
 	return deserialized
 
