@@ -24,6 +24,13 @@ class CommandType(Enum):
 				return member
 		return cls.INVALID
 
+type InputRules = list[type | str]
+type OutputRules = list[int | tuple[int, type]]
+type RuleSet = list[tuple[InputRules, OutputRules]]
+
+type SupplyDatabase = dict[str, tuple[int, int]]
+type DaysShortageList = list[tuple[str, tuple[int, int]]]
+
 
 
 def input_list(prompt: str) -> list[str]:
@@ -32,8 +39,8 @@ def input_list(prompt: str) -> list[str]:
 
 
 def parse_rules(
-		input_rules: list[type | str],
-		output_rules: list[int | tuple[int, type]],
+		input_rules: InputRules,
+		output_rules: OutputRules,
 		args: list[str]
 ) -> list[Any] | None:
 
@@ -65,7 +72,7 @@ def parse_rules(
 	return output_args
 
 def parse_rules_any(
-		rules: list[tuple[list[type | str], list[int | tuple[int, type]]]],
+		rules: RuleSet,
 		args: list[str],
 		default: list[Any]
 ) -> list[Any]:
@@ -90,7 +97,7 @@ def parse_args(command: list[str]) -> list[Any]:
 
 
 
-def parse_database(filename: str) -> dict[str, tuple[int, int]]:
+def parse_database(filename: str) -> SupplyDatabase:
 	file = open(filename, "r")
 	deserialized = {}
 	for line in file:
@@ -110,7 +117,7 @@ def remove_extension(filename: str) -> str:
 
 
 
-def get_sorted_days_shortage(database: dict[str, tuple[int, int]]) -> list[tuple]:
+def get_sorted_days_shortage(database: SupplyDatabase) -> DaysShortageList:
 	days_shortage = {}
 	for item, (quantity, daily_usage) in database.items():
 		runs_out_in = ceil(quantity / daily_usage)
@@ -125,7 +132,7 @@ def get_sorted_days_shortage(database: dict[str, tuple[int, int]]) -> list[tuple
 
 
 
-def needed_now(name: str, database: dict[str, tuple[int, int]]) -> None:
+def needed_now(name: str, database: SupplyDatabase) -> None:
 	print(f"Needed Items now for { name }:")
 
 	for item, (quantity, daily_usage) in database.items():
@@ -134,7 +141,7 @@ def needed_now(name: str, database: dict[str, tuple[int, int]]) -> None:
 		else:
 			print(f"{ daily_usage - quantity } x { item }")
 
-def needed_in(name: str, database: dict[str, tuple[int, int]], days: int) -> None:
+def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
 	print(f"Needed Items in { days } day/s for { name }:")
 
 	for item, (quantity, daily_usage) in database.items():
@@ -144,13 +151,13 @@ def needed_in(name: str, database: dict[str, tuple[int, int]], days: int) -> Non
 		else:
 			print(f"{ needed - quantity } x { item }")
 
-def runs_out(name: str, database: dict[str, tuple[int, int]]) -> None:
+def runs_out(name: str, database: SupplyDatabase) -> None:
 	print(f"For { name }:")
 
 	days_shortage = get_sorted_days_shortage(database)
 	print(f"{ days_shortage[0][0] } will run out in { days_shortage[0][1][0] } day/s")
 
-def run_outs(name: str, database: dict[str, tuple[int, int]], n_items: int) -> None:
+def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
 	print(f"For { name }:")
 
 	days_shortage = get_sorted_days_shortage(database)
