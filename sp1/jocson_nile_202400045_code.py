@@ -14,9 +14,6 @@ class CommandType(Enum):
 	EXIT       =  4,
 	INVALID    = -1,
 
-	def make(self, *args: Any) -> tuple[Self, List[Any]]:
-		return (self, list(args))
-
 	@classmethod
 	def _missing_(cls, value: object) -> Any:
 		value = value.upper()
