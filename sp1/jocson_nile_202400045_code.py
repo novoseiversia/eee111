@@ -106,7 +106,12 @@ def parse_args(command: List[str]) -> List[Any]:
 
 
 def __main__():
-	print(parse_args(input_list("Input your command:")))
+	while True:
+		command = parse_args(input_list(""))
+		match command[0]:
+			case CommandType.EXIT:
+				break
+
 	return
 
 
