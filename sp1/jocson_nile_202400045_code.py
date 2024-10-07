@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: 0BSD
 
 from enum import Enum
-from typing import Any, List, Self
+from typing import Any, List
 
 
 
