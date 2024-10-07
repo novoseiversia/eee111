@@ -15,7 +15,7 @@ class CommandType(Enum):
 	INVALID    = -1,
 
 	def make(self, *args: Any) -> tuple[Self, List[Any]]:
-		return (type, list(args))
+		return (self, list(args))
 
 type Command = tuple[CommandType, List[Any]]
 
