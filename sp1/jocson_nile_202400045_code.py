@@ -45,7 +45,10 @@ def parse_rules(
 			else:
 				parsed_args.append(arg)
 		else:
-			parsed_args.append(rule(arg))
+			try:
+				parsed_args.append(rule(arg))
+			except:
+				return None
 
 	output_args = []
 	for rule in output_rules:
