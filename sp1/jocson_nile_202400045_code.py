@@ -72,7 +72,6 @@ def parse_rules_any(rules: list[RuleSet], args: list[str], default: list[Any]) -
 	for input_rules, output_rules in rules:
 		if parsed := parse_rules(input_rules, output_rules, args):
 			return parsed
-
 	return default
 
 def parse_args(command: list[str]) -> list[Any]:
