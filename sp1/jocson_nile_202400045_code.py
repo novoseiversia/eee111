@@ -123,10 +123,22 @@ def parse_database(filename: str) -> dict[str, tuple[int, int]]:
 
 
 
+def needed_now(name: str, database: dict[str, tuple[int, int]]) -> None:
+	print(f"Needed items now for { name }:")
+	for item, (quantity, daily_usage) in database.items():
+		if quantity >= daily_usage:
+			continue
+		else:
+			print(f"{ daily_usage - quantity } x { item }")
+
+
+
 def __main__():
 	while True:
 		command = parse_args(input_list(""))
 		match command[0]:
+			case CommandType.NEEDED_NOW:
+				needed_now(command[1], parse_database(command[1]))
 			case CommandType.EXIT:
 				break
 
