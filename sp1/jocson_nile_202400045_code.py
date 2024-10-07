@@ -31,7 +31,7 @@ type OutputRules = list[int | tuple[int, type]]
 type RuleSet = tuple[InputRules, OutputRules]
 
 type SupplyDatabase = dict[str, tuple[int, int]]
-type DaysShortageList = list[tuple[str, tuple[int, int]]]
+type RemainingDaysDeficitList = list[tuple[str, tuple[int, int]]]
 
 
 
@@ -109,14 +109,14 @@ def remove_extension(filename: str) -> str:
 
 
 
-def get_sorted_days_shortage(database: SupplyDatabase) -> DaysShortageList:
-	days_shortage = {}
-	for item, (quantity, daily_usage) in database.items():
-		runs_out_in = ceil(quantity / daily_usage)
-		shortage = daily_usage * runs_out_in - quantity
-		days_shortage[item] = (runs_out_in, shortage)
+def get_sorted_remaining_days_deficit(database: SupplyDatabase) -> RemainingDaysDeficitList:
+	remaining_days_deficit = {}
+	for item, (quantity, daily_usage) in remaining_days_deficit:
+		remaining_days = ceil(quantity / daily_usage)
+		deficit = daily_usage * remaining_days - quantity
+		remaining_days_deficit[item] = (remaining_days, deficit)
 
-	sort_name     = sorted(days_shortage.items(), key=lambda kv: kv[0])
+	sort_name     = sorted(remaining_days_deficit.items(), key=lambda kv: kv[0])
 	sort_shortage = sorted(sort_name, key=lambda kv: kv[1][1], reverse=True)
 	sort_days     = sorted(sort_shortage, key=lambda kv: kv[1][0])
 
@@ -148,14 +148,14 @@ def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
 def runs_out(name: str, database: SupplyDatabase) -> None:
 	print(f"For { name }:")
 
-	days_shortage = get_sorted_days_shortage(database)
-	print(f"{ days_shortage[0][0] } will run out in { days_shortage[0][1][0] } day/s")
+	remaining_days_deficit = get_sorted_remaining_days_deficit(database)
+	print(f"{ remaining_days_deficit[0][0] } will run out in { remaining_days_deficit[0][1][0] } day/s")
 
 def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
 	print(f"For { name }:")
 
-	days_shortage = get_sorted_days_shortage(database)
-	for item in days_shortage[:n_items]:
+	remaining_days_deficit = get_sorted_remaining_days_deficit(database)
+	for item in remaining_days_deficit[:n_items]:
 		print(f"{ item[0] } will run out in { item[1][0] } day/s")
 
 
