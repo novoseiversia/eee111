@@ -112,6 +112,8 @@ def __main__():
 			case CommandType.EXIT:
 				break
 
+		print("")
+
 	return
 
 
