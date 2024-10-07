@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: 0BSD
 
 from enum import Enum
+from os import path
 from typing import Any, List
 
 
@@ -123,6 +124,11 @@ def parse_database(filename: str) -> dict[str, tuple[int, int]]:
 
 
 
+def remove_extension(filename: str) -> str:
+	return path.splitext(filename)[0]
+
+
+
 def needed_now(name: str, database: dict[str, tuple[int, int]]) -> None:
 	print(f"Needed items now for { name }:")
 	for item, (quantity, daily_usage) in database.items():
@@ -138,7 +144,7 @@ def __main__():
 		command = parse_args(input_list(""))
 		match command[0]:
 			case CommandType.NEEDED_NOW:
-				needed_now(command[1], parse_database(command[1]))
+				needed_now(remove_extension(command[1]), parse_database(command[1]))
 			case CommandType.EXIT:
 				break
 
