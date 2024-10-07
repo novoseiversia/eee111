@@ -1,0 +1,2 @@
+# SPDX-FileCopyrightText: Copyright (C) Nile Jocson <novoseiversia@gmail.com>
+# SPDX-License-Identifier: 0BSD
