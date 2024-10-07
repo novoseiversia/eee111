@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: 0BSD
 
 from enum import Enum
+from math import ceil
 from os import path
 from typing import Any, List
 
@@ -146,6 +147,27 @@ def needed_in(name: str, database: dict[str, tuple[int, int]], days: int) -> Non
 		else:
 			print(f"{ needed - quantity } x { item }")
 
+def get_sorted_days_shortage(database: dict[str, tuple[int, int]]) -> List[tuple]:
+	days_shortage = {}
+	for item, (quantity, daily_usage) in database.items():
+		runs_out_in = ceil(quantity / daily_usage)
+		shortage = daily_usage * runs_out_in - quantity
+		days_shortage[item] = (runs_out_in, shortage)
+
+	sort_shortage = sorted(days_shortage.items(), key=lambda kv: kv[1][1], reverse=True)
+	sort_days     = sorted(sort_shortage, key=lambda kv: kv[1][0])
+
+	return sort_days
+
+def runs_out(name: str, database: dict[str, tuple[int, int]]) -> None:
+	print(f"For { name }:")
+
+	days_shortage = get_sorted_days_shortage(database)
+
+	print(f"{ days_shortage[0][0] } will run out in { days_shortage[0][1][0] } day/s")
+
+
+
 
 
 def __main__():
@@ -156,6 +178,8 @@ def __main__():
 				needed_now(remove_extension(command[1]), parse_database(command[1]))
 			case CommandType.NEEDED_IN:
 				needed_in(remove_extension(command[1]), parse_database(command[1]), command[2])
+			case CommandType.RUNS_OUT:
+				runs_out(remove_extension(command[1]), parse_database(command[1]))
 			case CommandType.EXIT:
 				break
 
