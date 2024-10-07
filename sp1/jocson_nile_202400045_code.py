@@ -26,7 +26,7 @@ class CommandType(Enum):
 
 type InputRules = list[type | str]
 type OutputRules = list[int | tuple[int, type]]
-type RuleSet = list[tuple[InputRules, OutputRules]]
+type RuleSet = tuple[InputRules, OutputRules]
 
 type SupplyDatabase = dict[str, tuple[int, int]]
 type DaysShortageList = list[tuple[str, tuple[int, int]]]
@@ -66,7 +66,7 @@ def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[s
 
 	return output_args
 
-def parse_rules_any(rules: RuleSet, args: list[str], default: list[Any]) -> list[Any]:
+def parse_rules_any(rules: list[RuleSet], args: list[str], default: list[Any]) -> list[Any]:
 	for input_rules, output_rules in rules:
 		if parsed := parse_rules(input_rules, output_rules, args):
 			return parsed
