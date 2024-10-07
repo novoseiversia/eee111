@@ -75,16 +75,14 @@ def parse_rules_any(rules: list[RuleSet], args: list[str], default: list[Any]) -
 	return default
 
 def parse_args(command: list[str]) -> list[Any]:
-	rulesets: list[RuleSet] = [
-		([str, "needed_now"    ], [(1, CommandType), 0   ]),
-		([str, "needed_in", int], [(1, CommandType), 0, 2]),
-		([str, "runs_out"      ], [(1, CommandType), 0   ]),
-		([str, int, "run_outs" ], [(2, CommandType), 0, 1]),
-		(["exit"               ], [(0, CommandType)      ])
-	]
-
 	return parse_rules_any(
-		rulesets,
+		[
+			([str, "needed_now"    ], [(1, CommandType), 0   ]),
+			([str, "needed_in", int], [(1, CommandType), 0, 2]),
+			([str, "runs_out"      ], [(1, CommandType), 0   ]),
+			([str, int, "run_outs" ], [(2, CommandType), 0, 1]),
+			(["exit"               ], [(0, CommandType)      ])
+		],
 		command,
 		[CommandType.INVALID]
 	)
