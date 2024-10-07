@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: Copyright (C) Nile Jocson <novoseiversia@gmail.com>
 # SPDX-License-Identifier: 0BSD
 
+from dataclasses import dataclass
 from enum import Enum
 from math import ceil
 from os import path
@@ -26,12 +27,24 @@ class CommandType(Enum):
 
 
 
+@dataclass
+class StockInfo:
+	quantity: int
+	daily_usage: int
+
+@dataclass
+class RemainingInfo:
+	name: str
+	remaining_days: int
+	deficit: int
+
+
+
 type InputRules = list[type | str]
 type OutputRules = list[int | tuple[int, type]]
 type RuleSet = tuple[InputRules, OutputRules]
 
-type SupplyDatabase = dict[str, tuple[int, int]]
-type RemainingDaysDeficitList = list[tuple[str, tuple[int, int]]]
+type SupplyDatabase = dict[str, StockInfo]
 
 
 
@@ -91,14 +104,14 @@ def parse_args(command: list[str]) -> list[Any]:
 
 def parse_database(filename: str) -> SupplyDatabase:
 	file = open(filename, "r")
-	deserialized = {}
+	deserialized: SupplyDatabase = {}
 	for line in file:
 		if parsed := parse_rules(
 			[str, int, int],
 			[0, 1, 2],
 			line.split(",")
 		):
-			deserialized[parsed[0]] = (parsed[1], parsed[2])
+			deserialized[parsed[0]] = StockInfo(parsed[1], parsed[2])
 		else:
 			raise RuntimeError("Invalid hospital supply database format.")
 	file.close()
@@ -109,39 +122,39 @@ def remove_extension(filename: str) -> str:
 
 
 
-def get_sorted_remaining_days_deficit(database: SupplyDatabase) -> RemainingDaysDeficitList:
-	remaining_days_deficit = {}
-	for item, (quantity, daily_usage) in remaining_days_deficit:
-		remaining_days = ceil(quantity / daily_usage)
-		deficit = daily_usage * remaining_days - quantity
+def get_sorted_remaining_days_deficit(database: SupplyDatabase) -> list[RemainingInfo]:
+	remaining_days_deficit: dict[str, tuple[int, int]] = {}
+	for item, stock_info in database.items():
+		remaining_days = ceil(stock_info.quantity / stock_info.daily_usage)
+		deficit = stock_info.daily_usage * remaining_days - stock_info.quantity
 		remaining_days_deficit[item] = (remaining_days, deficit)
 
 	sort_name     = sorted(remaining_days_deficit.items(), key=lambda kv: kv[0])
 	sort_shortage = sorted(sort_name, key=lambda kv: kv[1][1], reverse=True)
 	sort_days     = sorted(sort_shortage, key=lambda kv: kv[1][0])
 
-	return sort_days
+	return [RemainingInfo(item, info[0], info[1]) for item, info in sort_days]
 
 
 
 def needed_now(name: str, database: SupplyDatabase) -> None:
 	print(f"Needed Items now for { name }:")
 
-	for item, (quantity, daily_usage) in database.items():
-		if quantity >= daily_usage:
+	for item, stock_info in database.items():
+		if stock_info.quantity >= stock_info.daily_usage:
 			continue
 		else:
-			print(f"{ daily_usage - quantity } x { item }")
+			print(f"{ stock_info.daily_usage - stock_info.quantity } x { item }")
 
 def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
 	print(f"Needed Items in { days } day/s for { name }:")
 
-	for item, (quantity, daily_usage) in database.items():
-		needed = daily_usage * days
-		if quantity >= needed:
+	for item, stock_info in database.items():
+		needed = stock_info.daily_usage * days
+		if stock_info.quantity >= needed:
 			continue
 		else:
-			print(f"{ needed - quantity } x { item }")
+			print(f"{ needed - stock_info.quantity } x { item }")
 
 
 
@@ -149,14 +162,14 @@ def runs_out(name: str, database: SupplyDatabase) -> None:
 	print(f"For { name }:")
 
 	remaining_days_deficit = get_sorted_remaining_days_deficit(database)
-	print(f"{ remaining_days_deficit[0][0] } will run out in { remaining_days_deficit[0][1][0] } day/s")
+	print(f"{ remaining_days_deficit[0].name } will run out in { remaining_days_deficit[0].remaining_days } day/s")
 
 def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
 	print(f"For { name }:")
 
 	remaining_days_deficit = get_sorted_remaining_days_deficit(database)
 	for item in remaining_days_deficit[:n_items]:
-		print(f"{ item[0] } will run out in { item[1][0] } day/s")
+		print(f"{ item.name } will run out in { item.remaining_days } day/s")
 
 
 
