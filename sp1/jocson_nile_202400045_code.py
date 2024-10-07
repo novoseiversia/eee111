@@ -27,11 +27,14 @@ class CommandType(Enum):
 def input_list(prompt: str) -> List[str]:
 	return [s for s in input(prompt).split()]
 
+
+
 def parse_rules(
 		input_rules: List[type | str],
 		output_rules: List[int | tuple[int, type]],
 		args: List[str]
 ) -> List[Any] | None:
+
 	if len(args) != len(input_rules):
 		return None
 
