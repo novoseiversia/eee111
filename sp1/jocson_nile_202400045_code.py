@@ -130,7 +130,7 @@ def remove_extension(filename: str) -> str:
 
 
 def needed_now(name: str, database: dict[str, tuple[int, int]]) -> None:
-	print(f"Needed items now for { name }:")
+	print(f"Needed Items now for { name }:")
 	for item, (quantity, daily_usage) in database.items():
 		if quantity >= daily_usage:
 			continue
