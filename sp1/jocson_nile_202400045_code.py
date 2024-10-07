@@ -75,8 +75,6 @@ def parse_rules_any(
 
 	return default
 
-
-
 def parse_args(command: List[str]) -> List[Any]:
 	needed_now_rules = ([str, "needed_now"], [(1, CommandType), 0])
 	needed_in_rules  = ([str, "needed_in", int], [(1, CommandType), 0, 2])
@@ -106,8 +104,6 @@ def parse_database(filename: str) -> dict[str, tuple[int, int]]:
 			raise RuntimeError("Invalid hospital supply database format.")
 
 	return deserialized
-
-
 
 def remove_extension(filename: str) -> str:
 	return path.splitext(filename)[0]
@@ -176,7 +172,6 @@ def __main__():
 				run_outs(remove_extension(command[1]), parse_database(command[1]), command[2])
 			case CommandType.EXIT:
 				break
-
 		print("")
 
 	return
