@@ -84,7 +84,7 @@ def parse_args(command: List[str]) -> List[Any]:
 		return parsed
 
 	elif parsed := parse_rules(
-		[str, int, "runouts"],
+		[str, int, "run_outs"],
 		[(2, CommandType), 0, 1],
 		command
 	):
