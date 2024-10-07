@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from enum import Enum
 from math import ceil
 from os import path
-from typing import Any
+from typing import Any, Optional
 
 
 
@@ -53,7 +53,7 @@ def input_list(prompt: str) -> list[str]:
 
 
 
-def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[str]) -> list[Any] | None:
+def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[str]) -> Optional[list[Any]]:
 	if len(args) != len(input_rules):
 		return None
 
