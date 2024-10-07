@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from enum import Enum
 from math import ceil
 from os import path
-from typing import Any, Optional
+from typing import Any, Optional, Self
 
 
 
@@ -19,6 +19,14 @@ class CommandType(Enum):
 
 	@classmethod
 	def _missing_(cls, value: object) -> Any:
+		"""
+		Allow construction of a CommandType from its name. Case-insensitive.
+
+		Returns
+		-------
+		Any
+			A member of the enum corresponding to the string. INVALID if none matched.
+		"""
 		value = str(value).upper()
 		for member in cls:
 			if member.name == value:
@@ -49,11 +57,60 @@ type SupplyDatabase = dict[str, StockInfo]
 
 
 def input_list(prompt: str) -> list[str]:
+	"""
+	Prompts the user to input a space-separated list.
+	"""
 	return input(prompt).split()
 
 
 
 def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[str]) -> Optional[list[Any]]:
+	"""
+	Parses the given arguments based on input and output rules.
+
+	Parameters
+	----------
+	input_rules : InputRules
+		If the rule is a type, tries to convert the corresponding argument into that type.
+		If the rule is a string, compares the corresponding argument with that string.
+		If any of these fail, the argument list is immediately invalid.
+	output_rules : OutputRules
+		Takes the element of the converted arguments and appends them into the list to be returned,
+		converting them again if a type is specified.
+	args : list[str]
+		The arguments to parse.
+
+	Returns
+	-------
+	Optional[list[Any]]
+		None is returned if the list is invalid; i.e. if the lengths of args and input_rules mismatch,
+		or if any of the input_rules weren't followed.
+		Otherwise, the converted and reordered arguments are returned.
+
+	Notes
+	-----
+	Given the command specification:
+		<file_name> needed_in <X>
+	The docopt string can be inferred:
+		<file_name:str> needed_in <X:int>
+	The input_rules can then be created from this:
+		[str, "needed_in", int]
+
+	Using these rules, the following args are invalid:
+		["needed_in", "3"]
+		["Hospital1.csv", "needed_in"]
+		["Hospital1.csv", "needed_in", "a"]
+
+	Only arguments that satisfy all input_rules are valid, such as:
+		["Hospital1.csv", "needed_in", "3"]
+	This is then converted based on the input_rules:
+		["Hospital1.csv", "needed_in", 3]
+
+	In order to rearrange and further convert the arguments, output_rules should be specified:
+		[(1, CommandType), 0, 2]
+	The final output can then be calculated:
+		[CommandType.NEEDED_IN, "Hospital1.csv", 3]
+	"""
 	if len(args) != len(input_rules):
 		return None
 
@@ -81,13 +138,57 @@ def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[s
 
 	return output_args
 
+
+
 def parse_rules_any(rules: list[RuleSet], args: list[str], default: list[Any]) -> list[Any]:
+	"""
+	Tries to parse the arguments with the given rulesets, and returns the first valid parse.
+
+	Parameters
+	----------
+	rules : list[RuleSet]
+		The list of RuleSets to try (a RuleSet is a pair of InputRules and OutputRules).
+	args : list[str]
+		The arguments to parse.
+	default: list[Any]
+		The default value returned if no valid parses were made.
+
+	Returns
+	-------
+	list[Any]
+		The first valid parse from the given list of rules, or default if no valid parses were made.
+	"""
 	for input_rules, output_rules in rules:
 		if parsed := parse_rules(input_rules, output_rules, args):
 			return parsed
 	return default
 
+
+
 def parse_args(command: list[str]) -> list[Any]:
+	"""
+	Parse the given arguments into a command.
+
+	Parameters
+	----------
+	command : list[str]
+		The arguments to parse.
+
+	Returns
+	-------
+	list[Any]
+		The command type and its arguments parsed from the given list of rules.
+		INVALID if no rules were satisfied.
+
+	Notes
+	-----
+	This tries to parse the arguments into the following docopt strings:
+		<file_name:str> "needed_now"
+		<file_name:str> "needed_in" <X:int>
+		<file_name:str> "runs_out"
+		<file_name:str> <N:int> "run_outs"
+		"exit"
+	"""
 	return parse_rules_any(
 		[
 			([str, "needed_now"    ], [(1, CommandType), 0   ]),
@@ -103,6 +204,19 @@ def parse_args(command: list[str]) -> list[Any]:
 
 
 def parse_database(filename: str) -> SupplyDatabase:
+	"""
+	Parses the given csv file as a SupplyDatabase.
+
+	Raises
+	------
+	RuntimeError
+		If the csv file could not be parsed as a SupplyDatabase.
+
+	Notes
+	-----
+	This tries to parse each line of the csv file using the following docopt string:
+		<item_name:str> <quantity:int> <daily_usage:int>
+	"""
 	file = open(filename, "r")
 	deserialized: SupplyDatabase = {}
 	for line in file:
@@ -117,7 +231,12 @@ def parse_database(filename: str) -> SupplyDatabase:
 	file.close()
 	return deserialized
 
+
+
 def remove_extension(filename: str) -> str:
+	"""
+	Removes the file extension from the given filename.
+	"""
 	return path.splitext(filename)[0]
 
 
