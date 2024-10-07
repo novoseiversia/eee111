@@ -41,7 +41,7 @@ def parse_args(command: List[str]) -> Command:
 
 
 def __main__():
-	print(parse_args(input_list("Input your command:"))[0].name())
+	print(parse_args(input_list("Input your command:")))
 	return
 
 
