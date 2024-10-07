@@ -22,7 +22,7 @@ type Command = tuple[CommandType, List[Any]]
 
 
 def input_list(prompt: str) -> List[str]:
-	return [s for s in input(prompt).split]
+	return [s for s in input(prompt).split()]
 
 def parse_args(command: List[str]) -> Command:
 	if command[1] == "needed_now":
