@@ -100,7 +100,7 @@ def parse_database(filename: str) -> SupplyDatabase:
 			deserialized[parsed[0]] = (parsed[1], parsed[2])
 		else:
 			raise RuntimeError("Invalid hospital supply database format.")
-
+	file.close()
 	return deserialized
 
 def remove_extension(filename: str) -> str:
