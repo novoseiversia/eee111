@@ -105,6 +105,24 @@ def parse_args(command: List[str]) -> List[Any]:
 
 
 
+def parse_csv(filename: str) -> dict[str, tuple[int, int]]:
+	file = open(filename, "r")
+	deserialized = {}
+	for line in file:
+		if parsed := parse_rules(
+			[str, int, int],
+			[0, 1, 2],
+			line.split()
+		):
+			deserialized[parsed[0]] = (parsed[1], parsed[2])
+
+		else:
+			raise RuntimeError("Invalid CSV format.")
+
+	return deserialized
+
+
+
 def __main__():
 	while True:
 		command = parse_args(input_list(""))
