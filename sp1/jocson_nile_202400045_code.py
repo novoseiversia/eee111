@@ -329,8 +329,8 @@ def help(info: str | None = None) -> None:
 	print(f"""{ info }Usage:
 	<file_name:str> needed_now        Gets amount of items needed immediately for the day.
 	<file_name:str> needed_in <X:int> Gets amount of items needed in X days.
-	<file_name:str> runs_out          Prints the first item to run out, as well as how many days it will last.
-	<file_name:str> <N:int> run_outs  Prints the first N items to run out, as well as how many days they will last.
+	<file_name:str> runs_out          Prints the first item to run out, and in how many days.
+	<file_name:str> <N:int> run_outs  Prints the first N items to run out, and in how many days.
 	help                              Prints this message.
 	exit                              Exits the program."""
 	)
