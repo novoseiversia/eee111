@@ -340,21 +340,24 @@ def help(info: Optional[str] = None) -> None:
 def __main__():
 	while True:
 		command = parse_args(input_list(""))
-		match command[0]:
-			case CommandType.NEEDED_NOW:
-				needed_now(remove_extension(command[1]), parse_database(command[1]))
-			case CommandType.NEEDED_IN:
-				needed_in(remove_extension(command[1]), parse_database(command[1]), command[2])
-			case CommandType.RUNS_OUT:
-				runs_out(remove_extension(command[1]), parse_database(command[1]))
-			case CommandType.RUN_OUTS:
-				run_outs(remove_extension(command[1]), parse_database(command[1]), command[2])
-			case CommandType.HELP:
-				help()
-			case CommandType.EXIT:
-				break
-			case _:
-				help("Invalid arguments provided.")
+		try:
+			match command[0]:
+				case CommandType.NEEDED_NOW:
+					needed_now(remove_extension(command[1]), parse_database(command[1]))
+				case CommandType.NEEDED_IN:
+					needed_in(remove_extension(command[1]), parse_database(command[1]), command[2])
+				case CommandType.RUNS_OUT:
+					runs_out(remove_extension(command[1]), parse_database(command[1]))
+				case CommandType.RUN_OUTS:
+					run_outs(remove_extension(command[1]), parse_database(command[1]), command[2])
+				case CommandType.HELP:
+					help()
+				case CommandType.EXIT:
+					break
+				case _:
+					help("Invalid arguments provided.")
+		except Exception as e:
+			print(e)
 		print("")
 
 	return
