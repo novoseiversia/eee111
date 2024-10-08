@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from enum import Enum
 from math import ceil
 from os import path
-from typing import Any, Optional, Self
+from typing import Any, Optional
 
 
 
