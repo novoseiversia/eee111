@@ -184,12 +184,12 @@ def parse_args(command: list[str]) -> list[Any]:
 	Notes
 	-----
 	This tries to parse the arguments into the following docopt strings:
-		<file_name:str> "needed_now"
-		<file_name:str> "needed_in" <X:int>
-		<file_name:str> "runs_out"
-		<file_name:str> <N:int> "run_outs"
-		"help"
-		"exit"
+		<file_name:str> needed_now
+		<file_name:str> needed_in <X:int>
+		<file_name:str> runs_out
+		<file_name:str> <N:int> run_outs
+		help
+		exit
 	"""
 	return parse_rules_any(
 		[
