@@ -14,7 +14,8 @@ class CommandType(Enum):
 	NEEDED_IN  =  1,
 	RUNS_OUT   =  2,
 	RUN_OUTS   =  3,
-	EXIT       =  4,
+	HELP       =  4,
+	EXIT       =  5,
 	INVALID    = -1,
 
 	@classmethod
@@ -187,6 +188,7 @@ def parse_args(command: list[str]) -> list[Any]:
 		<file_name:str> "needed_in" <X:int>
 		<file_name:str> "runs_out"
 		<file_name:str> <N:int> "run_outs"
+		"help"
 		"exit"
 	"""
 	return parse_rules_any(
@@ -195,6 +197,7 @@ def parse_args(command: list[str]) -> list[Any]:
 			([str, "needed_in", int], [(1, CommandType), 0, 2]),
 			([str, "runs_out"      ], [(1, CommandType), 0   ]),
 			([str, int, "run_outs" ], [(2, CommandType), 0, 1]),
+			(["help"               ], [(0, CommandType)      ]),
 			(["exit"               ], [(0, CommandType)      ])
 		],
 		command,
@@ -292,6 +295,23 @@ def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
 
 
 
+def help(info: Optional[str] = None) -> None:
+	if info != None:
+		info += "\n"
+	else:
+		info = ""
+
+	print(f"""{ info }Usage:
+	<file_name:str> needed_now        Gets amount of items needed immediately for the day.
+	<file_name:str> needed_in <X:int> Gets amount of items needed in X days.
+	<file_name:str> runs_out          Prints the first item to run out, as well as how many days it will last.
+	<file_name:str> <N:int> run_outs  Prints the first N items to run out, as well as how many days they will last.
+	help                              Prints this message.
+	exit                              Exits the program."""
+	)
+
+
+
 def __main__():
 	while True:
 		command = parse_args(input_list(""))
@@ -304,8 +324,12 @@ def __main__():
 				runs_out(remove_extension(command[1]), parse_database(command[1]))
 			case CommandType.RUN_OUTS:
 				run_outs(remove_extension(command[1]), parse_database(command[1]), command[2])
+			case CommandType.HELP:
+				help()
 			case CommandType.EXIT:
 				break
+			case _:
+				help("Invalid arguments provided.")
 		print("")
 
 	return
