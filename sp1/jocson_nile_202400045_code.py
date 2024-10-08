@@ -246,7 +246,19 @@ def remove_extension(filename: str) -> str:
 
 
 def get_sorted_supply_database(database: SupplyDatabase) -> list[tuple[str, StockInfo]]:
+	"""
+	Returns a sorted version of the supply database.
 
+	Returns
+	-------
+	list[tuple[str, StockInfo]]
+		The sorted supply database.
+
+	Notes
+	-----
+	The sorted database is sorted according to remaining_days in ascending order,
+	deficit in descending order, then name in ascending order.
+	"""
 	sort_name    = sorted(database.items(), key=lambda i: i[0])
 	sort_deficit = sorted(sort_name, key=lambda i: i[1].deficit, reverse=True)
 	sort_days    = sorted(sort_deficit, key=lambda i: i[1].remaining_days)
@@ -256,6 +268,9 @@ def get_sorted_supply_database(database: SupplyDatabase) -> list[tuple[str, Stoc
 
 
 def needed_now(name: str, database: SupplyDatabase) -> None:
+	"""
+	Prints how many items are needed to satisfy the daily usage.
+	"""
 	print(f"Needed Items now for { name }:")
 
 	for item, stock_info in database.items():
@@ -265,6 +280,9 @@ def needed_now(name: str, database: SupplyDatabase) -> None:
 			print(f"{ stock_info.daily_usage - stock_info.quantity } x { item }")
 
 def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
+	"""
+	Prints how many items are needed to satisfy daily usage for X days.
+	"""
 	print(f"Needed Items in { days } day/s for { name }:")
 
 	for item, stock_info in database.items():
@@ -277,6 +295,9 @@ def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
 
 
 def runs_out(name: str, database: SupplyDatabase) -> None:
+	"""
+	Prints the first item to run out, and in how many days.
+	"""
 	print(f"For { name }:")
 
 	sorted_database = get_sorted_supply_database(database)
@@ -285,6 +306,9 @@ def runs_out(name: str, database: SupplyDatabase) -> None:
 	print(f"{ item[0] } will run out in { item[1].remaining_days } day/s")
 
 def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
+	"""
+	Prints the first N items to run out, and in how many days.
+	"""
 	print(f"For { name }:")
 
 	sorted_database = get_sorted_supply_database(database)
@@ -294,6 +318,9 @@ def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
 
 
 def help(info: Optional[str] = None) -> None:
+	"""
+	Prints the help string.
+	"""
 	if info != None:
 		info += "\n"
 	else:
