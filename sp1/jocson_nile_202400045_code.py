@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from enum import Enum
 from math import ceil
 from os import path
-from typing import Any, Optional
+from typing import Any
 
 
 
@@ -57,7 +57,7 @@ def input_list(prompt: str) -> list[str]:
 
 
 
-def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[str]) -> Optional[list[Any]]:
+def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[str]) -> list[Any] | None:
 	"""
 	Parses the given arguments based on input and output rules.
 
@@ -75,7 +75,7 @@ def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[s
 
 	Returns
 	-------
-	Optional[list[Any]]
+	list[Any] | None
 		None is returned if the list is invalid; i.e. if the lengths of args and input_rules mismatch,
 		or if any of the input_rules weren't followed.
 		Otherwise, the converted and reordered arguments are returned.
@@ -303,7 +303,7 @@ def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
 	for item in sorted_database[:n_items]:
 		print(f"{ item[0] } will run out in { item[1].remaining_days } day/s")
 
-def help(info: Optional[str] = None) -> None:
+def help(info: str | None = None) -> None:
 	"""
 	Prints the help string.
 	"""
