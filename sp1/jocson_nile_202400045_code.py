@@ -46,6 +46,7 @@ type OutputRules = list[int | tuple[int, type]]
 type RuleSet = tuple[InputRules, OutputRules]
 
 type SupplyDatabase = dict[str, StockInfo]
+type SortedSupplyDatabase = list[tuple[str, StockInfo]]
 
 
 
@@ -243,14 +244,9 @@ def remove_extension(filename: str) -> str:
 
 
 
-def get_sorted_supply_database(database: SupplyDatabase) -> list[tuple[str, StockInfo]]:
+def get_sorted_supply_database(database: SupplyDatabase) -> SortedSupplyDatabase:
 	"""
 	Returns a sorted version of the supply database.
-
-	Returns
-	-------
-	list[tuple[str, StockInfo]]
-		The sorted supply database.
 
 	Notes
 	-----
