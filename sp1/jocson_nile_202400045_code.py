@@ -34,16 +34,12 @@ class CommandType(Enum):
 				return member
 		return cls.INVALID
 
-
-
 @dataclass
 class StockInfo:
 	quantity      : int
 	daily_usage   : int
 	remaining_days: int
 	deficit       : int
-
-
 
 type InputRules = list[type | str]
 type OutputRules = list[int | tuple[int, type]]
@@ -135,8 +131,6 @@ def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[s
 
 	return output_args
 
-
-
 def parse_rules_any(rules: list[RuleSet], args: list[str], default: list[Any]) -> list[Any]:
 	"""
 	Tries to parse the arguments with the given rulesets, and returns the first valid parse.
@@ -159,8 +153,6 @@ def parse_rules_any(rules: list[RuleSet], args: list[str], default: list[Any]) -
 		if parsed := parse_rules(input_rules, output_rules, args):
 			return parsed
 	return default
-
-
 
 def parse_args(command: list[str]) -> list[Any]:
 	"""
@@ -235,8 +227,6 @@ def parse_database(filename: str) -> SupplyDatabase:
 	file.close()
 	return deserialized
 
-
-
 def remove_extension(filename: str) -> str:
 	"""
 	Removes the file extension from the given filename.
@@ -292,8 +282,6 @@ def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
 		else:
 			print(f"{ needed - stock_info.quantity } x { item }")
 
-
-
 def runs_out(name: str, database: SupplyDatabase) -> None:
 	"""
 	Prints the first item to run out, and in how many days.
@@ -314,8 +302,6 @@ def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
 	sorted_database = get_sorted_supply_database(database)
 	for item in sorted_database[:n_items]:
 		print(f"{ item[0] } will run out in { item[1].remaining_days } day/s")
-
-
 
 def help(info: Optional[str] = None) -> None:
 	"""
