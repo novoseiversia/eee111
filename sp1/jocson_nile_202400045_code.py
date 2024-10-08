@@ -53,6 +53,7 @@ def input_list(prompt: str) -> list[str]:
 	"""
 	Prompts the user to input a space-separated list.
 	"""
+
 	return input(prompt).split()
 
 
@@ -104,6 +105,7 @@ def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[s
 	The final output can then be calculated:
 		[CommandType.NEEDED_IN, "Hospital1.csv", 3]
 	"""
+
 	if len(args) != len(input_rules):
 		return None
 
@@ -131,9 +133,9 @@ def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[s
 
 	return output_args
 
-def parse_rules_any(rules: list[RuleSet], args: list[str], default: list[Any]) -> list[Any]:
+def parse_rules_any(rulesets: list[RuleSet], args: list[str], default: list[Any]) -> list[Any]:
 	"""
-	Tries to parse the arguments with the given rulesets, and returns the first valid parse.
+	Tries to parse the arguments with the given RuleSets, and returns the first valid parse.
 
 	Parameters
 	----------
@@ -147,14 +149,15 @@ def parse_rules_any(rules: list[RuleSet], args: list[str], default: list[Any]) -
 	Returns
 	-------
 	list[Any]
-		The first valid parse from the given list of rules, or default if no valid parses were made.
+		The first valid parse from the given RuleSets, or default if no valid parses were made.
 	"""
-	for input_rules, output_rules in rules:
+
+	for input_rules, output_rules in rulesets:
 		if parsed := parse_rules(input_rules, output_rules, args):
 			return parsed
 	return default
 
-def parse_args(command: list[str]) -> list[Any]:
+def parse_args(args: list[str]) -> list[Any]:
 	"""
 	Parse the given arguments into a command.
 
@@ -179,6 +182,7 @@ def parse_args(command: list[str]) -> list[Any]:
 		help
 		exit
 	"""
+
 	return parse_rules_any(
 		[
 			([str, "needed_now"    ], [(1, CommandType), 0   ]),
@@ -188,7 +192,7 @@ def parse_args(command: list[str]) -> list[Any]:
 			(["help"               ], [(0, CommandType)      ]),
 			(["exit"               ], [(0, CommandType)      ])
 		],
-		command,
+		args,
 		[CommandType.INVALID]
 	)
 
@@ -208,8 +212,10 @@ def parse_database(filename: str) -> SupplyDatabase:
 	This tries to parse each line of the csv file using the following docopt string:
 		<item_name:str> <quantity:int> <daily_usage:int>
 	"""
+
 	file = open(filename, "r")
-	deserialized: SupplyDatabase = {}
+	database: SupplyDatabase = {}
+
 	for line in file:
 		if parsed := parse_rules(
 			[str, int, int],
@@ -221,16 +227,18 @@ def parse_database(filename: str) -> SupplyDatabase:
 			daily_usage = parsed[2]
 			remaining_days = ceil(quantity / daily_usage)
 			deficit = daily_usage * remaining_days - quantity
-			deserialized[name] = StockInfo(quantity, daily_usage, remaining_days, deficit)
+			database[name] = StockInfo(quantity, daily_usage, remaining_days, deficit)
 		else:
 			raise RuntimeError("Invalid hospital supply database format.")
+
 	file.close()
-	return deserialized
+	return database
 
 def remove_extension(filename: str) -> str:
 	"""
 	Removes the file extension from the given filename.
 	"""
+
 	return path.splitext(filename)[0]
 
 
@@ -249,6 +257,7 @@ def get_sorted_supply_database(database: SupplyDatabase) -> list[tuple[str, Stoc
 	The sorted database is sorted according to remaining_days in ascending order,
 	deficit in descending order, then name in ascending order.
 	"""
+
 	sort_name    = sorted(database.items(), key=lambda i: i[0])
 	sort_deficit = sorted(sort_name, key=lambda i: i[1].deficit, reverse=True)
 	sort_days    = sorted(sort_deficit, key=lambda i: i[1].remaining_days)
@@ -261,6 +270,7 @@ def needed_now(name: str, database: SupplyDatabase) -> None:
 	"""
 	Prints how many items are needed to satisfy the daily usage.
 	"""
+
 	print(f"Needed Items now for { name }:")
 
 	for item, stock_info in database.items():
@@ -273,6 +283,7 @@ def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
 	"""
 	Prints how many items are needed to satisfy daily usage for X days.
 	"""
+
 	print(f"Needed Items in { days } day/s for { name }:")
 
 	for item, stock_info in database.items():
@@ -286,6 +297,7 @@ def runs_out(name: str, database: SupplyDatabase) -> None:
 	"""
 	Prints the first item to run out, and in how many days.
 	"""
+
 	print(f"For { name }:")
 
 	sorted_database = get_sorted_supply_database(database)
@@ -297,6 +309,7 @@ def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
 	"""
 	Prints the first N items to run out, and in how many days.
 	"""
+
 	print(f"For { name }:")
 
 	sorted_database = get_sorted_supply_database(database)
@@ -307,6 +320,7 @@ def help(info: str | None = None) -> None:
 	"""
 	Prints the help string.
 	"""
+
 	if info != None:
 		info += "\n"
 	else:
