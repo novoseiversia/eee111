@@ -316,7 +316,7 @@ def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
 	for item in sorted_database[:n_items]:
 		print(f"{ item[0] } will run out in { item[1].remaining_days } day/s")
 
-def help(info: str | None = None) -> None:
+def help_string(info: str | None = None) -> None:
 	"""
 	Prints the help string.
 	"""
@@ -351,11 +351,11 @@ def __main__():
 				case CommandType.RUN_OUTS:
 					run_outs(remove_extension(command[1]), parse_database(command[1]), command[2])
 				case CommandType.HELP:
-					help()
+					help_string()
 				case CommandType.EXIT:
 					break
 				case _:
-					help("Invalid arguments provided.")
+					help_string("Invalid arguments provided.")
 		except Exception as e:
 			print(e)
 		print("")
