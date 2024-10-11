@@ -143,7 +143,8 @@
 				These converted arguments then move on to the next step:
 
 			\subsubsection{Application of output rules}
-				An output rule can either be an integer or a tuple of an integer and a type. The integer
+				An output rule can either be an integer or a tuple of an integer and a type, i.e.
+				\verb+OutputRules = list[int | tuple[int, type]]+. The integer
 				corresponds to an index in the argument list, and if a type is specified, then the element
 				in that index is converted into that type. The converted element is then appended into the
 				list of fully processed arguments which will be returned from the function. For example:
