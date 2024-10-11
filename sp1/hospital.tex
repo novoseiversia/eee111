@@ -178,26 +178,12 @@
 				parameter is returned instead.
 
 		\subsection{Database logic}
+
 			\subsubsection{Deserializing the database}
-				Some classes, aliases and functions have also been defined in order to make it easier to handle
-				the information inside the supply database. The function
-
-				\begin{verbatim}
-					parse_database(filename: str) -> SupplyDatabase
-				\end{verbatim}
-
-				Opens and reads the CSV file denoted by the given filenme. It then parses the file line by line using
-				the docopt string
-
-				\begin{verbatim}
-					<item_name:int>
-					<item_current_amount:int>
-					<item_daily_usage:int>
-				\end{verbatim}
-
-				reusing the parser logic in~\ref{parser-logic} and populates a \verb|SupplyDatabase| instance, and
-				returns it. A \verb|SupplyDatabase| is a \verb|dict[str, StockInfo]|, which contains stock information
-				for each item. A \verb|StockInfo| is then defined as follows:
+				In order to make code more readable when dealing with multiple items in a database, a
+				\verb|dataclass| (C \verb|struct| equivalent) \verb|StockInfo| was created. This allows us
+				to refer to each element, i.e. item name, item quantity, item usage, etc. by variable names,
+				instead of indices if tuples were used instead. The definition of StockInfo is as follows:
 
 				\begin{verbatim}
 					@dataclass
@@ -208,9 +194,16 @@
 						deficit       : int
 				\end{verbatim}
 
-				A tuple was not used for the purpose of storing stock information since there is no way to
-				distinguish between the different values other than using their indices. By using dataclasses,
-				names can be given to the elements, making the source code more readable.
+				An alias \verb|SupplyDatabase = dict[str, StockInfo]| is also defined. These are used in the
+				function
+
+				\begin{verbatim}
+					parse_database(filename: str) -> SupplyDatabase
+				\end{verbatim}
+
+				which opens a CSV file, parses it with the parser logic in \ref{parser-logic}, calculates
+				the remaining days and deficits for each item, and returns a \verb|SupplyDatabase| instance
+				with all the gathered stock info.
 
 
 
