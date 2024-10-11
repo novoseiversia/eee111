@@ -123,9 +123,8 @@
 					automatically invalidated since the amount of arguments is not equal to the amount
 					of input rules. However, \verb|["exit"]| is valid.
 					\item With the input rules \verb|[int, str]|, the arguments \verb|["Hello", "World"]|
-					are invalid, since \verb|"Hello"| is not an integer, thus invalidating the entire
-					list. However, \verb|["500", "World"]| is valid, since each argument follows its
-					corresponding input rule.
+					are invalid, since \verb|"Hello"| is not an integer. However, \verb|["500", "World"]|
+					is valid.
 					\item With the input rules \verb|["abs", int]|, the arguments \verb|["absv", "-5"]|
 					are invalid, since \verb|"absv"| is not the same as \verb|"abs"|. However,
 					\verb|["abs", "-5"]| is valid.
