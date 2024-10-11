@@ -72,4 +72,18 @@
 				\item \verb|exit| exits the program.
 			\end{itemize}
 
+		\subsection{Input file}
+
+			The commmands \verb|needed_now|, \verb|needed_in|, \verb|runs_outs|, and
+			\verb|run_outs| takes in a \verb|<file_name:str>| parameter, which is a
+			string corresponding to the filename of the CSV file containing the hospital's
+			supply database. This file can have a variable amount of rows, but the amount of
+			columns is fixed. These columns are as follows:
+
+			\begin{enumerate}
+				\item Item name: str
+				\item Item current amount: int
+				\item Item daily usage: int
+			\end{enumerate}
+
 \end{document}
