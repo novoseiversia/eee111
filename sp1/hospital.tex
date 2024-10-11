@@ -67,7 +67,7 @@
 				\item \verb|exit| exits the program.
 			\end{itemize}
 
-		\subsection{Input file}
+		\subsection{Input file}\label{input-file}
 			The commmands \verb|needed_now|, \verb|needed_in|, \verb|runs_outs|, and
 			\verb|run_outs| takes in a \verb|<file_name:str>| argument, which is a
 			string corresponding to the filename of the CSV file containing the hospital's
@@ -80,7 +80,7 @@
 				\item Item daily usage: int
 			\end{enumerate}
 
-		\subsection{Parser logic}
+		\subsection{Parser logic}\label{parser-logic}
 			The program relies on a set of enums and functions in order to make it
 			easier to parse user input into commands and their arguments, not relying on tedious
 			chains of if-elif-else statements. These comprise the parser logic of the program.
@@ -176,6 +176,41 @@
 				which takes in a list of arguments and tries to parse them against the given rulesets. The first
 				valid parse is returned, or if all parses were invalid, then the value of the \verb|default|
 				parameter is returned instead.
+
+		\subsection{Database logic}
+			\subsubsection{Deserializing the database}
+				Some classes, aliases and functions have also been defined in order to make it easier to handle
+				the information inside the supply database. The function
+
+				\begin{verbatim}
+					parse_database(filename: str) -> SupplyDatabase
+				\end{verbatim}
+
+				Opens and reads the CSV file denoted by the given filenme. It then parses the file line by line using
+				the docopt string
+
+				\begin{verbatim}
+					<item_name:int>
+					<item_current_amount:int>
+					<item_daily_usage:int>
+				\end{verbatim}
+
+				reusing the parser logic in~\ref{parser-logic} and populates a \verb|SupplyDatabase| instance, and
+				returns it. A \verb|SupplyDatabase| is a \verb|dict[str, StockInfo]|, which contains stock information
+				for each item. A \verb|StockInfo| is then defined as follows:
+
+				\begin{verbatim}
+					@dataclass
+					class StockInfo:
+						quantity      : int
+						daily_usage   : int
+						remaining_days: int
+						deficit       : int
+				\end{verbatim}
+
+				A tuple was not used for the purpose of storing stock information since there is no way to
+				distinguish between the different values other than using their indices. By using dataclasses,
+				names can be given to the elements, making the source code more readable.
 
 
 
