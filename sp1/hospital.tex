@@ -107,10 +107,10 @@
 				argument is invalid. For example:
 
 				\begin{itemize}
-					\item With the input rule \verb|int|, the argument \verb|"Hello"| is invalid,
+					\item For the input rule \verb|int|, the argument \verb|"Hello"| is invalid,
 					since that cannot be converted into an integer. However, \verb|"500"| is
 					valid.
-					\item With the input rule \verb|"exit"|, the argument \verb|"exita"| is invalid,
+					\item For the input rule \verb|"exit"|, the argument \verb|"exita"| is invalid,
 					since the two strings are not equal. However, \verb|"exit"| is valid.
 				\end{itemize}
 
@@ -119,13 +119,13 @@
 				corresponding input rule, for the list of arguments to be valid. For example:
 
 				\begin{itemize}
-					\item With the input rules \verb|["exit"]|, the arguments \verb|["exit", "1"]| are
+					\item For the input rules \verb|["exit"]|, the arguments \verb|["exit", "1"]| are
 					automatically invalidated since the amount of arguments is not equal to the amount
 					of input rules. However, \verb|["exit"]| is valid.
-					\item With the input rules \verb|[int, str]|, the arguments \verb|["Hello", "World"]|
+					\item For the input rules \verb|[int, str]|, the arguments \verb|["Hello", "World"]|
 					are invalid, since \verb|"Hello"| is not an integer. However, \verb|["500", "World"]|
 					is valid.
-					\item With the input rules \verb|["abs", int]|, the arguments \verb|["absv", "-5"]|
+					\item For the input rules \verb|["abs", int]|, the arguments \verb|["absv", "-5"]|
 					are invalid, since \verb|"absv"| is not the same as \verb|"abs"|. However,
 					\verb|["abs", "-5"]| is valid.
 				\end{itemize}
