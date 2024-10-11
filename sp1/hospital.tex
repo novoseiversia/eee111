@@ -29,7 +29,7 @@
 
 
 	\section{Documentation}
-		\subsection{Overview of the program}
+		\subsection{Overview of the program} \label{overview-of-the-program}
 			The program is a CLI supply and inventory monitoring program,
 			created for a hospital, based on the EEE111 SP1 specifications
 			provided. It accepts user input, and allows the following commands
@@ -79,5 +79,68 @@
 				\item Item current amount: int
 				\item Item daily usage: int
 			\end{enumerate}
+
+		\subsection{Parser logic}
+			The program relies on a set of enums and functions in order to make it
+			easier to parse user input into commands and their arguments, not relying on tedious
+			chains of if-elif-else statements. These comprise the parser logic of the program.
+			The core of this logic is the function
+
+			\begin{verbatim}
+				parse_rules(
+					input_rules: InputRules,
+					output_rules: OutputRules,
+					args: list[str]
+				) -> list[Any] | None
+			\end{verbatim}
+
+			which parses the given string arguments and outputs a validated, converted and
+			reordered arguments, based on the given input and output rules. This makes it
+			extremely easy to validate user input, and parse them into well-defined lists
+			of commands and their arguments. The logic of this function can be broken down into
+			two steps:
+
+			\subsubsection{Application of input rules}
+				An input rule can be either a type or a string. If it is a type, then that type
+				must be constructable from the argument under that rule. If it is a string, then
+				that string must be the same as the argument under that rule. Otherwise, the
+				argument is invalid. For example:
+
+				\begin{itemize}
+					\item With the input rule \verb|int|, the argument \verb|"Hello"| is invalid,
+					since that cannot be converted into an integer. However, \verb|"500"| is
+					valid.
+					\item With the input rule \verb|"exit"|, the argument \verb|"exita"| is invalid,
+					since the two strings are not equal. However, \verb|"exit"| is valid.
+				\end{itemize}
+
+				For a list of input rules \verb+InputRules = list[type | str]+, the list of
+				arguments must be the same length, and each argument must be valid with its
+				corresponding input rule, for the list of arguments to be valid. For example:
+
+				\begin{itemize}
+					\item With the input rules \verb|["exit"]|, the arguments \verb|["exit", "1"]| are
+					automatically invalidated since the amount of arguments is not equal to the amount
+					of input rules. However, \verb|["exit"]| is valid.
+					\item With the input rules \verb|[int, str]|, the arguments \verb|["Hello", "World"]|
+					are invalid, since \verb|"Hello"| is not an integer, thus invalidating the entire
+					list. However, \verb|["500", "World"]| is valid, since each argument follows its
+					corresponding input rule.
+					\item With the input rules \verb|["abs", int]|, the arguments \verb|["absv", "-5"]|
+					are invalid, since \verb|"absv"| is not the same as \verb|"abs"|. However,
+					\verb|["abs", "-5"]| is valid.
+				\end{itemize}
+
+				If all string arguments are valid, then a list is created of the converted arguments based
+				on the input rules. For example:
+
+				\begin{itemize}
+					\item With the input rules \verb|["add", int, int]|, the arguments \\
+					\verb|["add", "5", "8"]| are converted into \verb|["add", 5, 8]|.
+					\item With the input rules \verb|["floor", float]|, the arguments \\
+					\verb|["floor", "4.8"]| are converted into \verb|["floor", 4.8]|.
+				\end{itemize}
+
+
 
 \end{document}
