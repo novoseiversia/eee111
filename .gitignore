@@ -1,31 +1,40 @@
 *
 
-!/1/
-!/1/**
 
-!/2/
-!/2/**
 
-!/3/
-!/3/**
+!/1/sum_prod_avg.py
+!/1/swap.py
 
-!/4/
-!/4/**
 
-!/5/
-!/5/**
 
-!/sp1/
-!/sp1/**
+!/2/nthroot.py
+
+
+
+!/3/nprimes.py
+!/3/prime_flowchart.png
+!/3/prime.py
+
+
+
+!/4/gcf_lcm_squares.py
+
+
+
+!/5/anagram.py
+!/5/list_sum_avg.py
+!/5/palindrome.py
+!/5/resistance.py
+!/5/vowels.py
+
+
+
+!/sp1/hospital.pdf
+!/sp1/hospital.py
+!/sp1/hospital.tex
+
+
 
 !/.gitignore
 !/LICENSE
 !/README.md
-
-
-
-*.aux
-*.fdb_latexmk
-*.fls
-*.log
-*.synctex.gz
