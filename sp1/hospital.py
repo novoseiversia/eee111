@@ -134,9 +134,9 @@ def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[s
 
 	return output_args
 
-def parse_rules_any(rulesets: list[RuleSet], args: list[str], default: list[Any]) -> list[Any]:
-	"""
-	Tries to parse the arguments with the given RuleSets, and returns the first valid parse.
+def parse_rulesets(rulesets: list[RuleSet], args: list[str], default: list[Any]) -> list[Any]:
+	"""ume
+	Tries to parse the argnts with the given RuleSets, and returns the first valid parse.
 
 	Parameters
 	----------
@@ -184,7 +184,7 @@ def parse_args(args: list[str]) -> list[Any]:
 		exit
 	"""
 
-	return parse_rules_any(
+	return parse_rulesets(
 		[
 			([str, "needed_now"    ], [(1, CommandType), 0   ]),
 			([str, "needed_in", int], [(1, CommandType), 0, 2]),
