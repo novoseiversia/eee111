@@ -1,15 +1,75 @@
 \documentclass{article}
 
+
+
 \title{EEE111 SP1 Documentation}
 \author{Nile Jocson \textless{novoseiversia@gmail.com}\textgreater}
 \date{October 11, 2024}
 
+
+
 \begin{document}
 	\maketitle
+
 	\pagebreak
+
+
 
 	\tableofcontents
+
 	\pagebreak
 
+
+
 	\section{Introdution}
+
+	This is the documentation for my EEE111 SP1 submission. Included here is
+	documentation for each user-defined function, rationales for how the logic
+	is written, how user commands are executed, etc. A reference for each user-defined
+	function and class is also included.
+
+	\newpage
+
+
+
+	\section{Documentation}
+		\subsection{Overview of the program}
+
+			The program is a CLI supply and inventory monitoring program,
+			created for a hospital, based on the EEE111 SP1 specifications
+			provided. It accepts user input, and allows the following commands
+			(in docopt form):
+
+			\begin{verbatim}
+			<file_name:str> needed_now
+			<file_name:str> needed_in <X:int>
+			<file_name:str> runs_out
+			<file_name:str> <N:int> run_outs
+			help
+			exit
+			\end{verbatim}
+
+			\begin{itemize}
+				\item \verb|<file_name:str> needed_now| prints out the amount needed to fulfill
+			the item shortage for the current day.
+
+				\item \verb|<file_name:str needed_in <X:int>| prints out the amount needed to
+				fulfill the item shortage for the following \verb|X| days.
+
+				\item \verb|<file_name:str> runs_out| prints out the first item to run out, and
+				in how many days it will\footnote{
+					These commands will sort in this order in the case of conflicts:
+					by amount of days to run out (ascending),
+					by amount of deficit (descending),
+					and by lexical order of their names (ascending).
+				}.
+
+				\item \verb|<file_name:str> run_outs| prints out the virst \verb|N| items to run
+				out, and in how many days they will\footnotemark[\value{footnote}].
+
+				\item \verb|help| prints out the help text.
+
+				\item \verb|exit| exits the program.
+			\end{itemize}
+
 \end{document}
