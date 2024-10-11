@@ -158,6 +158,25 @@
 
 				This rearranged list is then returned from the function.
 
+			\subsubsection{Rulesets}
+				Generally, and especially in this program, user input is not validated only using one set of
+				input and output rules. Instead, since this program needs to handle 6 different commands,
+				it needs to check against 6 different sets of input and output rules, or rulesets, i.e.
+				\verb|RuleSet = tuple[InputRules, OutputRules]|. In order to make this a trivial task, another
+				parse function has been defined
+
+				\begin{verbatim}
+					parse_rulesets(
+						rulesets: list[RuleSet],
+						args: list[str],
+						default: list[Any]
+					) -> list[Any]
+				\end{verbatim}
+
+				which takes in a list of arguments and tries to parse them against the given rulesets. The first
+				valid parse is returned. If all parses were invalid, then the value of the \verb|default| parameter
+				is returned instead.
+
 
 
 \end{document}
