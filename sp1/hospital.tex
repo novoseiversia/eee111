@@ -205,6 +205,50 @@
 				the remaining days and deficits for each item, and returns a \verb|SupplyDatabase| instance
 				with all the gathered stock info.
 
+			\subsubsection{Sorting the database}
+				Sorting the database is necessary for the correct output for the commands \verb|runs_out|
+				and \verb|run_outs|. The alias and function
+
+				\begin{verbatim}
+					SortedSupplyDatabase = list[tuple[str, StockInfo]]
+
+					get_sorted_supply_database(
+						database: SupplyDatabase
+					) -> SortedSupplyDatabase
+				\end{verbatim}
+
+				were defined for this purpose. A new alias is necessary since a Python \verb|dict| is not
+				sorted by default, and a separate function is necessary since Python's \verb|sort| and
+				\verb|sorted| functions cannot take in a custom comparator (unlike C++'s \verb|std::map<T>|
+				and \verb|std::sort()|)
+
+				In order to properly sort the database, the function takes advantage of the fact that
+				Python's default sorting algorithm is a stable sort. This means that it will not touch the
+				order of equal-keyed elements. With this in mind, sorting with multiple criteria can be
+				done by sorting multiple times, in reverse order of the criteria.
+
+				For example, in order to sort the list
+
+				\begin{verbatim}
+					[(1, 5), (1, 2), (1, 9), (2, 5), (3, 6)]
+				\end{verbatim}
+
+				by the first element first, then the second element, it is necessary to sort by the second
+				element first:
+
+				\begin{verbatim}
+					[(1, 2), (1, 5), (2, 5), (3, 6), (1, 9)]
+				\end{verbatim}
+
+				and then to sort by the first element second:
+
+				\begin{verbatim}
+					[(1, 2), (1, 5), (1, 9), (2, 5), (3, 6)]
+				\end{verbatim}
+
+				This fact extends to sorting with any amount of criteria, including the sorting criteria
+				defined for \verb|runs_out| and \verb|run_outs|.
+
 
 
 \end{document}
