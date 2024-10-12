@@ -249,6 +249,39 @@
 				This fact extends to sorting with any amount of criteria, including the sorting criteria
 				defined for \verb|runs_out| and \verb|run_outs|.
 
+		\subsection{Parsing user input}
+			\subsubsection{Commands}
+				Recall that multiple different commands with different parameters were defined in~
+				\ref{overview-of-the-program}. While the different command names will be present in valid
+				user input, they are present simply as strings, and not explicitly as command names. In order
+				to explicitly define each command, an enumeration was defined:
+
+				\begin{verbatim}
+					class CommandType(Enum):
+						NEEDED_NOW =  0,
+						NEEDED_IN  =  1,
+						RUNS_OUT   =  2,
+						RUN_OUTS   =  3,
+						HELP       =  4,
+						EXIT       =  5,
+						INVALID    = -1,
+				\end{verbatim}
+
+				This makes invalid command names easily handleable, eliminating the need to constantly
+				check strings. A convenience function was still defined in order to easily convert
+				between strings of command names in any case and the well-defined command types, returning
+				\verb|CommandType.INVALID| for invalid command names:
+
+				\begin{verbatim}
+					_missing_(cls, value: object) -> Any
+				\end{verbatim}
+
+				This function also allows the conversion between strings and enums in the parser functions
+				in~\ref{parser-logic} as a typed output rule. For example, with the output rules
+				\verb|[(1, CommandType), 0]|, the arguments \\
+				\verb|["Hospital1.csv", "needed_now"]| will be converted into \\
+				\verb|[CommandType.NEEDED_NOW, "Hospital1.csv"]|.
+
 
 
 \end{document}
