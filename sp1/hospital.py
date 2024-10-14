@@ -34,8 +34,6 @@ class TransformInfo:
 	convert : type | Callable
 	position: int
 
-
-
 @dataclass
 class ParseRule:
 	transforms : list[TransformInfo]
@@ -49,8 +47,6 @@ class StockInfo:
 	daily_usage   : int
 	remaining_days: int
 	deficit       : int
-
-
 
 type SupplyDatabase = dict[str, StockInfo]
 type SortedSupplyDatabase = list[tuple[str, StockInfo]]
@@ -85,8 +81,6 @@ def parse_rules(rules: list[ParseRule], args: list[str]) -> list[Any] | None:
 
 	return parsed
 
-
-
 def parse_rulesets(rulesets: list[list[ParseRule]], args: list[str], default: list[Any]) -> list[Any]:
 	for rules in rulesets:
 
@@ -94,8 +88,6 @@ def parse_rulesets(rulesets: list[list[ParseRule]], args: list[str], default: li
 			return parsed
 
 	return default
-
-
 
 def parse_args(args: list[str]) -> list[Any]:
 	return parse_rulesets(
@@ -154,36 +146,32 @@ def parse_database(filename: str) -> SupplyDatabase:
 	file.close()
 	return database
 
-
-
 def remove_extension(filename: str) -> str:
 	return path.splitext(filename)[0]
 
 
 
-def strcmp(l: str, r: str) -> int:
-	if l < r:
+def strcmp(left: str, right: str) -> int:
+	if left < right:
 		return -1
 
-	elif l > r:
+	elif left > right:
 		return 1
 
 	else:
 		return 0
 
-def supply_database_compare(l: tuple[str, StockInfo], r: tuple[str, StockInfo]) -> int:
-	l_name, l_info = l
-	r_name, r_info = r
+def supply_database_compare(left: tuple[str, StockInfo], right: tuple[str, StockInfo]) -> int:
+	left_name, left_info = left
+	right_name, right_info = right
 
-	if (compare_days := l_info.remaining_days - r_info.remaining_days) != 0:
+	if (compare_days := left_info.remaining_days - right_info.remaining_days) != 0:
 		return compare_days
 
-	if (compare_deficit := r_info.deficit - l_info.deficit) != 0:
+	if (compare_deficit := right_info.deficit - left_info.deficit) != 0:
 		return compare_deficit
 
-	return strcmp(l_name, r_name)
-
-
+	return strcmp(left_name, right_name)
 
 def get_sorted_supply_database(database: SupplyDatabase) -> SortedSupplyDatabase:
 	return sorted(database.items(), key=cmp_to_key(supply_database_compare))
@@ -203,24 +191,20 @@ def needed_now(args: list[Any]) -> None:
 		else:
 			print(f"{ info.daily_usage - info.quantity } x { item }")
 
-
-
 def needed_in(args: list[Any]) -> None:
 	database = args[1]
 	name = args[2]
-	days = args[3]
+	x = args[3]
 
-	print(f"Needed Items in { days } day/s for { name }:")
+	print(f"Needed Items in { x } day/s for { name }:")
 
 	for item, info in database.items():
-		needed = info.daily_usage * days
+		needed = info.daily_usage * x
 		if info.quantity >= needed:
 			continue
 
 		else:
 			print(f"{ needed - info.quantity } x { item }")
-
-
 
 def runs_out(args: list[Any]) -> None:
 	database = args[1]
@@ -229,24 +213,19 @@ def runs_out(args: list[Any]) -> None:
 	print(f"For { name }:")
 
 	sorted_database = get_sorted_supply_database(database)
-
 	item = sorted_database[0]
 	print(f"{ item[0] } will run out in { item[1].remaining_days } day/s")
-
-
 
 def run_outs(args: list[Any]) -> None:
 	database = args[1]
 	name = args[2]
-	n_items = args[3]
+	n = args[3]
 
 	print(f"For { name }:")
 
 	sorted_database = get_sorted_supply_database(database)
-	for item in sorted_database[:n_items]:
+	for item in sorted_database[:n]:
 		print(f"{ item[0] } will run out in { item[1].remaining_days } day/s")
-
-
 
 def help_string(info: str | None = None) -> None:
 	if info != None:
