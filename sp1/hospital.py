@@ -33,6 +33,8 @@ class TransformInfo:
 	convert : type | Callable
 	position: int
 
+
+
 @dataclass
 class ParseRule:
 	transforms : list[TransformInfo]
@@ -81,7 +83,6 @@ def parse_rules(rules: list[ParseRule], args: list[str]) -> list[Any] | None:
 			return None
 
 	return parsed
-
 
 
 
