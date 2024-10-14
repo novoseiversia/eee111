@@ -169,18 +169,31 @@
 				\item ``abs'', float
 			\end{center}
 
-			and the arguments
+			the following arguments will have the selected rules and outputs
 
 			\begin{center}
-				\item ``add'', ``5'', ``8''
+				\begin{tabular}{c c c c}
+					Arguments & Selected & Output \\
+					\\
+						``add'', ``5'', ``8'' &
+						``add'', int, int &
+						``add'', 5, 8
+					\\
+						``sub'', ``90.4'', ``3.13'' &
+						``sub'', int, int &
+						``sub'', 90, 3
+					\\
+						``abs'', ``-144'' &
+						``abs'', float &
+						``abs'', -144.0
+					\\
+						``sin'', ``90'' &
+						None &
+						Default parameter
+				\end{tabular}
 			\end{center}
 
 			the selected rules and its output will be
-
-			\begin{center}
-				\item ``add'', int, int
-				\item ``add'', 5, 8
-			\end{center}
 
 			If no rules successfully validate the arguments, the \verb|default| argument of
 			\verb|parse_rules| is returned.
