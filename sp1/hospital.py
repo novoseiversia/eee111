@@ -245,39 +245,45 @@ def help_string(info: str | None = None) -> None:
 
 
 
+def run_command(args: list[Any]) -> bool:
+	match args[0]:
+		case CommandType.NEEDED_NOW:
+			needed_now(args)
+
+		case CommandType.NEEDED_IN:
+			needed_in(args)
+
+		case CommandType.RUNS_OUT:
+			runs_out(args)
+
+		case CommandType.RUN_OUTS:
+			run_outs(args)
+
+		case CommandType.HELP:
+			help_string()
+
+		case CommandType.EXIT:
+			return False
+
+		case _:
+			help_string("Invalid arguments provided.")
+
+	return True
+
+
+
 def __main__():
 	while True:
 		command = parse_args(input_list(""))
 
 		try:
-			match command[0]:
-				case CommandType.NEEDED_NOW:
-					needed_now(command)
-
-				case CommandType.NEEDED_IN:
-					needed_in(command)
-
-				case CommandType.RUNS_OUT:
-					runs_out(command)
-
-				case CommandType.RUN_OUTS:
-					run_outs(command)
-
-				case CommandType.HELP:
-					help_string()
-
-				case CommandType.EXIT:
-					break
-
-				case _:
-					help_string("Invalid arguments provided.")
+			if not run_command(command):
+				return
 
 		except Exception as e:
 			print(e)
 
 		print("")
-
-	return
 
 
 
