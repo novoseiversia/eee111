@@ -173,7 +173,7 @@ def supply_database_compare(left: tuple[str, StockInfo], right: tuple[str, Stock
 
 	return strcmp(left_name, right_name)
 
-def get_sorted_supply_database(database: SupplyDatabase) -> SortedSupplyDatabase:
+def sort_supply_database(database: SupplyDatabase) -> SortedSupplyDatabase:
 	return sorted(database.items(), key=cmp_to_key(supply_database_compare))
 
 
@@ -212,7 +212,7 @@ def runs_out(args: list[Any]) -> None:
 
 	print(f"For { name }:")
 
-	sorted_database = get_sorted_supply_database(database)
+	sorted_database = sort_supply_database(database)
 	item = sorted_database[0]
 	print(f"{ item[0] } will run out in { item[1].remaining_days } day/s")
 
@@ -223,7 +223,7 @@ def run_outs(args: list[Any]) -> None:
 
 	print(f"For { name }:")
 
-	sorted_database = get_sorted_supply_database(database)
+	sorted_database = sort_supply_database(database)
 	for item in sorted_database[:n]:
 		print(f"{ item[0] } will run out in { item[1].remaining_days } day/s")
 
