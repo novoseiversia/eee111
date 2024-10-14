@@ -27,15 +27,17 @@ class CommandType(Enum):
 		return cls.INVALID
 
 @dataclass
+class ParseRule:
+	convert_type   : type
+	output_position: int
+	find_string    : str | None = None
+
+@dataclass
 class StockInfo:
 	quantity      : int
 	daily_usage   : int
 	remaining_days: int
 	deficit       : int
-
-type InputRules = list[type | str]
-type OutputRules = list[int | tuple[int, type]]
-type RuleSet = tuple[InputRules, OutputRules]
 
 type SupplyDatabase = dict[str, StockInfo]
 type SortedSupplyDatabase = list[tuple[str, StockInfo]]
@@ -47,49 +49,36 @@ def input_list(prompt: str) -> list[str]:
 
 
 
-def parse_rules(input_rules: InputRules, output_rules: OutputRules, args: list[str]) -> list[Any] | None:
-	if len(args) != len(input_rules):
+def parse_rules(rules: list[ParseRule], args: list[str]) -> list[Any] | None:
+	if len(args) != len(rules):
 		return None
 
-	parsed_args = []
-	for rule, arg in zip(input_rules, args):
-		if isinstance(rule, str):
-			if not isinstance(arg, str):
-				return None
-			if rule != arg:
-				return None
-			else:
-				parsed_args.append(arg)
-		else:
-			try:
-				parsed_args.append(rule(arg))
-			except:
-				return None
+	parsed: list[Any] = [None] * len(rules)
+	for rule, arg in zip(rules, args):
+		if rule.find_string != None and rule.find_string != arg:
+			return None
+		try:
+			parsed[rule.output_position] = rule.convert_type(arg)
+		except:
+			return None
 
-	output_args = []
-	for rule in output_rules:
-		if isinstance(rule, int):
-			output_args.append(parsed_args[rule])
-		else:
-			output_args.append(rule[1](parsed_args[rule[0]]))
+	return parsed
 
-	return output_args
-
-def parse_rulesets(rulesets: list[RuleSet], args: list[str], default: list[Any]) -> list[Any]:
-	for input_rules, output_rules in rulesets:
-		if parsed := parse_rules(input_rules, output_rules, args):
+def parse_rulesets(rulesets: list[list[ParseRule]], args: list[str], default: list[Any]) -> list[Any]:
+	for rules in rulesets:
+		if parsed := parse_rules(rules, args):
 			return parsed
 	return default
 
 def parse_args(args: list[str]) -> list[Any]:
 	return parse_rulesets(
 		[
-			([str, "needed_now"    ], [(1, CommandType), 0   ]),
-			([str, "needed_in", int], [(1, CommandType), 0, 2]),
-			([str, "runs_out"      ], [(1, CommandType), 0   ]),
-			([str, int, "run_outs" ], [(2, CommandType), 0, 1]),
-			(["help"               ], [(0, CommandType)      ]),
-			(["exit"               ], [(0, CommandType)      ])
+			[ParseRule(str, 1), ParseRule(CommandType, 0, "needed_now")],
+			[ParseRule(str, 1), ParseRule(CommandType, 0, "needed_in"), ParseRule(int, 2)],
+			[ParseRule(str, 1), ParseRule(CommandType, 0, "runs_out")],
+			[ParseRule(str, 1), ParseRule(int, 2), ParseRule(CommandType, 0, "run_outs")],
+			[ParseRule(CommandType, 0, "help")],
+			[ParseRule(CommandType, 0, "exit")],
 		],
 		args,
 		[CommandType.INVALID]
@@ -103,8 +92,7 @@ def parse_database(filename: str) -> SupplyDatabase:
 
 	for line in file:
 		if parsed := parse_rules(
-			[str, int, int],
-			[0, 1, 2],
+			[ParseRule(str, 0), ParseRule(int, 1), ParseRule(int, 2)],
 			line.split(",")
 		):
 			name = parsed[0]
