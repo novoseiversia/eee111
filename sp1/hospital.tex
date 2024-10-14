@@ -26,7 +26,7 @@
 		\begin{itemize}
 			\item \verb|<file_name:str> needed_now| --- prints out the amount of items
 			needed to fulfill the item shortage for the current day.
-			\item \verb|<file_name:str needed_in <X:int>| --- prints out the amount of items
+			\item \verb|<file_name:str> needed_in <X:int>| --- prints out the amount of items
 			needed to fulfill the item shortage for the following \verb|X| days.
 			\item \verb|<file_name:str> runs_out| --- prints out the first item to run out, and
 			in how many days it will.
@@ -36,14 +36,14 @@
 			\item \verb|exit| exits the program.
 		\end{itemize}
 
-		The program will accept commands indefinitely, exiting when the \verb|exit| command is
+		The program will accept commands indefinitely, exiting only when the \verb|exit| command is
 		entered. If an invalid command is entered, the program prints out the help text.
 
 		\pagebreak
 
 	\section{Parsing}
 		Parsing utilities were created in order to simplify parsing inputs. This eliminates the
-		need for long if-elif-else chains and complicatede string comparisons, and instead
+		need for long if-elif-else chains and complicated string comparisons, and instead
 		abstracts them into an easy-to-use API\@. This API consists of two dataclasses and
 		two functions:
 
@@ -76,7 +76,7 @@
 			\subsubsection{Arguments}
 				The parsing API uses input in the form of \verb|list[str]|. It does not handle
 				actual program IO, nor does it handle the splitting of the input lines. This
-				input type is derived from the return type of \verb|str.split()|, which was
+				input type is derived from the return type of \verb|str.split()|, which is
 				used to split user input by a specified delimiter. From now on, the term
 				``arguments'' will be used to refer to user input with type \verb|list[str]|
 				given to the parsing API\@.
@@ -87,13 +87,12 @@
 				which the argument must be a valid parameters of. In addition, it may also specify
 				a string which the argument must be equal to; this is used to disambiguate between
 				command names. If any one of these were not satisfied, the argument is invalid. A
-				rule is defined with the \verb|ParseRule| class.
+				rule is defined with the \verb|ParseRule| dataclass.
 
 				Most programs however, take in multiple arguments, thus requiring multiple rules.
-				Rules are simply a \verb|list[ParseRule]|, where each element has a corresponding
-				argument (corresponding rules and elements have the same index). Each element is
-				validated against its corresponding rule. If any one rule is not satisfied, the
-				whole argument list is invalid.
+				Rules are simply a \verb|list[ParseRule]|, where each rule has a corresponding
+				argument with the same index. Each element is validated against its corresponding
+				rule. If any one rule is not satisfied, the whole argument list is invalid.
 
 				Here are some examples of rules, and their valid and invalid arguments:
 
@@ -101,19 +100,26 @@
 					\begin{tabular}{c c c}
 						Rules & Valid & Invalid \\
 						\\
-							int & 5 & ``a''
+							int &
+							``5'' &
+							``a''
 						\\
-							int, int & 5, 10 & 5, ``a''
+							int, int &
+							``5'', ``10'' &
+							``5'', ``a''
 						\\
-							``add'', int, int & ``add'', 5, 10 & ``sub'', ``5'', ``10''
+							``add'', int, int &
+							``add'', ``5'', ``10'' &
+							``sub'', ``5'', ``10''
 						\\
-							``abs'', int & ``abs'', -5.4 & ``absv'', -5.4
+							``abs'', int &
+							``abs'', ``-5.4'' &
+							``absv'', ``-5.4''
 						\\
 					\end{tabular}
 				\end{center}
 
 				If the arguments given to \verb|parse_rules| are invalid, it returns \verb|None|.
-				If not, it moves on to the next process.
 
 		\subsection{Output}
 			As said before, rules specify a list of transforms. These transforms are defined
