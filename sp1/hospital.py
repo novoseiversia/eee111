@@ -26,11 +26,15 @@ class CommandType(Enum):
 				return member
 		return cls.INVALID
 
+
+
 @dataclass
 class ParseRule:
 	convert_type   : type
 	output_position: int
 	find_string    : str | None = None
+
+
 
 @dataclass
 class StockInfo:
@@ -38,6 +42,8 @@ class StockInfo:
 	daily_usage   : int
 	remaining_days: int
 	deficit       : int
+
+
 
 type SupplyDatabase = dict[str, StockInfo]
 type SortedSupplyDatabase = list[tuple[str, StockInfo]]
@@ -54,21 +60,31 @@ def parse_rules(rules: list[ParseRule], args: list[str]) -> list[Any] | None:
 		return None
 
 	parsed: list[Any] = [None] * len(rules)
+
 	for rule, arg in zip(rules, args):
 		if rule.find_string != None and rule.find_string != arg:
 			return None
+
 		try:
 			parsed[rule.output_position] = rule.convert_type(arg)
+
 		except:
 			return None
 
 	return parsed
 
+
+
+
 def parse_rulesets(rulesets: list[list[ParseRule]], args: list[str], default: list[Any]) -> list[Any]:
 	for rules in rulesets:
+
 		if parsed := parse_rules(rules, args):
 			return parsed
+
 	return default
+
+
 
 def parse_args(args: list[str]) -> list[Any]:
 	return parse_rulesets(
@@ -100,12 +116,16 @@ def parse_database(filename: str) -> SupplyDatabase:
 			daily_usage = parsed[2]
 			remaining_days = ceil(quantity / daily_usage)
 			deficit = daily_usage * remaining_days - quantity
+
 			database[name] = StockInfo(quantity, daily_usage, remaining_days, deficit)
+
 		else:
 			raise RuntimeError("Invalid hospital supply database format.")
 
 	file.close()
 	return database
+
+
 
 def remove_extension(filename: str) -> str:
 	return path.splitext(filename)[0]
@@ -127,8 +147,11 @@ def needed_now(name: str, database: SupplyDatabase) -> None:
 	for item, stock_info in database.items():
 		if stock_info.quantity >= stock_info.daily_usage:
 			continue
+
 		else:
 			print(f"{ stock_info.daily_usage - stock_info.quantity } x { item }")
+
+
 
 def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
 	print(f"Needed Items in { days } day/s for { name }:")
@@ -137,8 +160,11 @@ def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
 		needed = stock_info.daily_usage * days
 		if stock_info.quantity >= needed:
 			continue
+
 		else:
 			print(f"{ needed - stock_info.quantity } x { item }")
+
+
 
 def runs_out(name: str, database: SupplyDatabase) -> None:
 	print(f"For { name }:")
@@ -148,6 +174,8 @@ def runs_out(name: str, database: SupplyDatabase) -> None:
 	item = sorted_database[0]
 	print(f"{ item[0] } will run out in { item[1].remaining_days } day/s")
 
+
+
 def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
 	print(f"For { name }:")
 
@@ -155,9 +183,12 @@ def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
 	for item in sorted_database[:n_items]:
 		print(f"{ item[0] } will run out in { item[1].remaining_days } day/s")
 
+
+
 def help_string(info: str | None = None) -> None:
 	if info != None:
 		info += "\n"
+
 	else:
 		info = ""
 
@@ -175,24 +206,33 @@ def help_string(info: str | None = None) -> None:
 def __main__():
 	while True:
 		command = parse_args(input_list(""))
+
 		try:
 			match command[0]:
 				case CommandType.NEEDED_NOW:
 					needed_now(remove_extension(command[1]), parse_database(command[1]))
+
 				case CommandType.NEEDED_IN:
 					needed_in(remove_extension(command[1]), parse_database(command[1]), command[2])
+
 				case CommandType.RUNS_OUT:
 					runs_out(remove_extension(command[1]), parse_database(command[1]))
+
 				case CommandType.RUN_OUTS:
 					run_outs(remove_extension(command[1]), parse_database(command[1]), command[2])
+
 				case CommandType.HELP:
 					help_string()
+
 				case CommandType.EXIT:
 					break
+
 				case _:
 					help_string("Invalid arguments provided.")
+
 		except Exception as e:
 			print(e)
+
 		print("")
 
 	return
