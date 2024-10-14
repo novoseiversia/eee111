@@ -97,25 +97,26 @@
 				Here are some examples of rules, and their valid and invalid arguments:
 
 				\begin{center}
-					\begin{tabular}{c c c}
-						Rules & Valid & Invalid \\
-						\\
-							int &
-							``5'' &
-							``a''
-						\\
-							int, int &
-							``5'', ``10'' &
-							``5'', ``a''
-						\\
-							``add'', int, int &
-							``add'', ``5'', ``10'' &
-							``sub'', ``5'', ``10''
-						\\
-							``abs'', int &
-							``abs'', ``-5.4'' &
-							``absv'', ``-5.4''
-						\\
+					\begin{tabular}{|c|c|c|}
+						\hline
+						Rules & Valid & Invalid
+						\\ \hline
+							\verb|int| &
+							\verb|"5"| &
+							\verb|"a"|
+						\\ \hline
+							\verb|int|, \verb|int| &
+							\verb|"5", "10"| &
+							\verb|"5", "a"|
+						\\ \hline
+							\verb|"add", int, int| &
+							\verb|"add", "5", "10"| &
+							\verb|"sub", "5", "10"|
+						\\ \hline
+							\verb|"abs", int| &
+							\verb|"abs", "-5.4"| &
+							\verb|"absv", "-5.4"|
+						\\\hline
 					\end{tabular}
 				\end{center}
 
@@ -132,21 +133,33 @@
 			Here are some examples of rules with transforms, and their input and outputs:
 
 			\begin{center}
-				\begin{tabular}{c c c}
-					Rules & Input & Output \\
-					\\
-						\{[\{int, 1\}]\}, \{[\{float, 0\}]\}, \{[\{float, 2\}]\} &
-						``10.0'', ``5'', ``6'' &
-						5.0, 10, 2.0
-					\\
-						\{[\{int, 0\}, \{float, 1\}, \{str, 2\}]\} &
-						``94'' &
-						94, 94.0, ``94''
-					\\
-						\{[\{str, 0\}], ``abs''\}, \{[\{float, 1\}]\} &
-						``abs'', ``94'' &
-						``abs'', 94.0
-					\\
+				\begin{tabular}{|c|c|c|}
+					\hline
+					Rules & Input & Output
+					\\ \hline
+						\begin{tabular}{@{}c@{}}
+							\verb|{[{int, 1}]},| \\
+							\verb|{[{float, 0}]},| \\
+							\verb|{[{float, 2}]}|
+						\end{tabular} &
+						\verb|"10.0", "5", "6"| &
+						\verb|5.0, 10, 6.0|
+					\\ \hline
+						\begin{tabular}{@{}c@{}}
+							\verb|{[{int, 1}],| \\
+							\verb|[{float, 0}],| \\
+							\verb|[{float, 2}]}|
+						\end{tabular} &
+						\verb|"94"| &
+						\verb|94, 94.0, "94"|
+					\\ \hline
+						\begin{tabular}{@{}c@{}}
+							\verb|{[{str, 0}], "abs"},| \\
+							\verb|{[{float, 1}]}| \\
+						\end{tabular} &
+						\verb|"abs", "94"| &
+						\verb|"abs", 94.0|
+					\\ \hline
 				\end{tabular}
 			\end{center}
 
@@ -161,41 +174,41 @@
 			successfully validate them. This process is governed by the \verb|parse_rulesets|
 			function.
 
-			For example, given the ruleset
+			For example, given the ruleset:
 
 			\begin{center}
-				\item ``add'', int, int
-				\item ``sub'', int, int
-				\item ``abs'', float
+				\verb|"add", int, int| \\
+				\verb|"sub", int, int| \\
+				\verb|"abs", float|    \\
 			\end{center}
 
-			the following arguments will have the selected rules and outputs
+			the following arguments will be validated by the selected rule, returning the outputs:
 
 			\begin{center}
-				\begin{tabular}{c c c c}
-					Arguments & Selected & Output \\
-					\\
-						``add'', ``5'', ``8'' &
-						``add'', int, int &
-						``add'', 5, 8
-					\\
-						``sub'', ``90.4'', ``3.13'' &
-						``sub'', int, int &
-						``sub'', 90, 3
-					\\
-						``abs'', ``-144'' &
-						``abs'', float &
-						``abs'', -144.0
-					\\
-						``sin'', ``90'' &
-						None &
-						Default parameter
+				\begin{tabular}{|c|c|c|c|}
+					\hline
+					Arguments & Selected & Output
+					\\ \hline
+						\verb|"add", "5", "8"| &
+						\verb|"add", int, int| &
+						\verb|"add", 5, 8|
+					\\ \hline
+						\verb|"sub", "90.4", "3.13"| &
+						\verb|"sub", int, int| &
+						\verb|"sub", 90, 3|
+					\\ \hline
+						\verb|"abs", "-144"| &
+						\verb|"abs", float| &
+						\verb|"abs", -144.0|
+					\\ \hline
+						\verb|"sin", "90"| &
+						\verb|None| &
+						\verb|default|
+					\\ \hline
 				\end{tabular}
 			\end{center}
 
-			the selected rules and its output will be
-
-			If no rules successfully validate the arguments, the \verb|default| argument of
+			Note that if no rules successfully validate the arguments, the \verb|default| argument of
 			\verb|parse_rules| is returned.
 
 \end{document}
