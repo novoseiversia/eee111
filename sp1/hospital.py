@@ -95,21 +95,21 @@ def parse_args(args: list[str]) -> list[Any]:
 	return parse_rulesets(
 		[
 			[
-				ParseRule([TransformInfo(str, 1)]),
+				ParseRule([TransformInfo(parse_database, 1), TransformInfo(remove_extension, 2)]),
 				ParseRule([TransformInfo(CommandType, 0)], "needed_now")
 			],
 			[
-				ParseRule([TransformInfo(str, 1)]),
+				ParseRule([TransformInfo(parse_database, 1), TransformInfo(remove_extension, 2)]),
 				ParseRule([TransformInfo(CommandType, 0)], "needed_in"),
-				ParseRule([TransformInfo(int, 2)])
+				ParseRule([TransformInfo(int, 3)])
 			],
 			[
-				ParseRule([TransformInfo(str, 1)]),
+				ParseRule([TransformInfo(parse_database, 1), TransformInfo(remove_extension, 2)]),
 				ParseRule([TransformInfo(CommandType, 0)], "runs_out")
 			],
 			[
-				ParseRule([TransformInfo(str, 1)]),
-				ParseRule([TransformInfo(int, 2)]),
+				ParseRule([TransformInfo(parse_database, 1), TransformInfo(remove_extension, 2)]),
+				ParseRule([TransformInfo(int, 3)]),
 				ParseRule([TransformInfo(CommandType, 0)], "run_outs")
 			],
 			[
@@ -164,7 +164,10 @@ def get_sorted_supply_database(database: SupplyDatabase) -> SortedSupplyDatabase
 
 
 
-def needed_now(name: str, database: SupplyDatabase) -> None:
+def needed_now(args: list[Any]) -> None:
+	database = args[1]
+	name = args[2]
+
 	print(f"Needed Items now for { name }:")
 
 	for item, stock_info in database.items():
@@ -176,7 +179,11 @@ def needed_now(name: str, database: SupplyDatabase) -> None:
 
 
 
-def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
+def needed_in(args: list[Any]) -> None:
+	database = args[1]
+	name = args[2]
+	days = args[3]
+
 	print(f"Needed Items in { days } day/s for { name }:")
 
 	for item, stock_info in database.items():
@@ -189,7 +196,10 @@ def needed_in(name: str, database: SupplyDatabase, days: int) -> None:
 
 
 
-def runs_out(name: str, database: SupplyDatabase) -> None:
+def runs_out(args: list[Any]) -> None:
+	database = args[1]
+	name = args[2]
+
 	print(f"For { name }:")
 
 	sorted_database = get_sorted_supply_database(database)
@@ -199,7 +209,11 @@ def runs_out(name: str, database: SupplyDatabase) -> None:
 
 
 
-def run_outs(name: str, database: SupplyDatabase, n_items: int) -> None:
+def run_outs(args: list[Any]) -> None:
+	database = args[1]
+	name = args[2]
+	n_items = args[3]
+
 	print(f"For { name }:")
 
 	sorted_database = get_sorted_supply_database(database)
@@ -233,16 +247,16 @@ def __main__():
 		try:
 			match command[0]:
 				case CommandType.NEEDED_NOW:
-					needed_now(remove_extension(command[1]), parse_database(command[1]))
+					needed_now(command)
 
 				case CommandType.NEEDED_IN:
-					needed_in(remove_extension(command[1]), parse_database(command[1]), command[2])
+					needed_in(command)
 
 				case CommandType.RUNS_OUT:
-					runs_out(remove_extension(command[1]), parse_database(command[1]))
+					runs_out(command)
 
 				case CommandType.RUN_OUTS:
-					run_outs(remove_extension(command[1]), parse_database(command[1]), command[2])
+					run_outs(command)
 
 				case CommandType.HELP:
 					help_string()
