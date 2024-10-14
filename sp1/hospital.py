@@ -94,12 +94,30 @@ def parse_rulesets(rulesets: list[list[ParseRule]], args: list[str], default: li
 def parse_args(args: list[str]) -> list[Any]:
 	return parse_rulesets(
 		[
-			[ParseRule([TransformInfo(str, 1)]), ParseRule([TransformInfo(CommandType, 0)], "needed_now")],
-			[ParseRule([TransformInfo(str, 1)]), ParseRule([TransformInfo(CommandType, 0)], "needed_in"), ParseRule([TransformInfo(int, 2)])],
-			[ParseRule([TransformInfo(str, 1)]), ParseRule([TransformInfo(CommandType, 0)], "runs_out")],
-			[ParseRule([TransformInfo(str, 1)]), ParseRule([TransformInfo(int, 2)]), ParseRule([TransformInfo(CommandType, 0)], "run_outs")],
-			[ParseRule([TransformInfo(CommandType, 0)], "help")],
-			[ParseRule([TransformInfo(CommandType, 0)], "exit")],
+			[
+				ParseRule([TransformInfo(str, 1)]),
+				ParseRule([TransformInfo(CommandType, 0)], "needed_now")
+			],
+			[
+				ParseRule([TransformInfo(str, 1)]),
+				ParseRule([TransformInfo(CommandType, 0)], "needed_in"),
+				ParseRule([TransformInfo(int, 2)])
+			],
+			[
+				ParseRule([TransformInfo(str, 1)]),
+				ParseRule([TransformInfo(CommandType, 0)], "runs_out")
+			],
+			[
+				ParseRule([TransformInfo(str, 1)]),
+				ParseRule([TransformInfo(int, 2)]),
+				ParseRule([TransformInfo(CommandType, 0)], "run_outs")
+			],
+			[
+				ParseRule([TransformInfo(CommandType, 0)], "help")
+			],
+			[
+				ParseRule([TransformInfo(CommandType, 0)], "exit")
+			],
 		],
 		args,
 		[CommandType.INVALID]
