@@ -82,12 +82,12 @@
 				given to the parsing API\@.
 
 			\subsubsection{Rules}
-				A rule determines if an argument is valid. It specifies a transform which contains
-				either a type that the argument must be convertible to, or a function of which the
-				argument must be a valid parameter of. In addition, it may also specify a string
-				which the argument must be equal to; this is used to disambiguate between command
-				names. If any one of these were not satisfied, the argument is invalid. A rule is
-				defined with the \verb|ParseRule| class.
+				A rule determines if an argument is valid. It specifies a list of transforms which
+				contains either types that the argument must be convertible to, or functions of
+				which the argument must be a valid parameters of. In addition, it may also specify
+				a string which the argument must be equal to; this is used to disambiguate between
+				command names. If any one of these were not satisfied, the argument is invalid. A
+				rule is defined with the \verb|ParseRule| class.
 
 				Most programs however, take in multiple arguments, thus requiring multiple rules.
 				Rules are simply a \verb|list[ParseRule]|, where each element has a corresponding
