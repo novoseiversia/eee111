@@ -63,7 +63,11 @@ def parse_rules(rules: list[ParseRule], args: list[str]) -> list[Any] | None:
 	if len(args) != len(rules):
 		return None
 
-	parsed: list[Any] = [None] * len(rules)
+	output = 0
+	for rule in rules:
+		output += len(rule.transforms)
+
+	parsed: list[Any] = [None] * output
 
 	for rule, arg in zip(rules, args):
 		if rule.find_string != None and rule.find_string != arg:
