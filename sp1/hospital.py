@@ -65,11 +65,11 @@ def parse_rules(rules: list[ParseRule], args: list[str]) -> list[Any] | None:
 	if len(args) != len(rules):
 		return None
 
-	output = 0
+	outputs = 0
 	for rule in rules:
-		output += len(rule.transforms)
+		outputs += len(rule.transforms)
 
-	parsed: list[Any] = [None] * output
+	parsed: list[Any] = [None] * outputs
 
 	for rule, arg in zip(rules, args):
 		if rule.find_string != None and rule.find_string != arg:
@@ -175,12 +175,12 @@ def needed_now(args: list[Any]) -> None:
 
 	print(f"Needed Items now for { name }:")
 
-	for item, stock_info in database.items():
-		if stock_info.quantity >= stock_info.daily_usage:
+	for item, info in database.items():
+		if info.quantity >= info.daily_usage:
 			continue
 
 		else:
-			print(f"{ stock_info.daily_usage - stock_info.quantity } x { item }")
+			print(f"{ info.daily_usage - info.quantity } x { item }")
 
 
 
@@ -191,13 +191,13 @@ def needed_in(args: list[Any]) -> None:
 
 	print(f"Needed Items in { days } day/s for { name }:")
 
-	for item, stock_info in database.items():
-		needed = stock_info.daily_usage * days
-		if stock_info.quantity >= needed:
+	for item, info in database.items():
+		needed = info.daily_usage * days
+		if info.quantity >= needed:
 			continue
 
 		else:
-			print(f"{ needed - stock_info.quantity } x { item }")
+			print(f"{ needed - info.quantity } x { item }")
 
 
 
@@ -274,10 +274,10 @@ def run_command(args: list[Any]) -> bool:
 
 def __main__():
 	while True:
-		command = parse_args(input_list(""))
+		args = parse_args(input_list(""))
 
 		try:
-			if not run_command(command):
+			if not run_command(args):
 				return
 
 		except Exception as e:
