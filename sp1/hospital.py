@@ -30,7 +30,7 @@ class CommandType(Enum):
 
 @dataclass
 class TransformInfo:
-	convert : type
+	convert : type | Callable
 	position: int
 
 @dataclass
