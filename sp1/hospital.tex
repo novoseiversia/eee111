@@ -73,54 +73,52 @@
 		The inner workings of this API can be broken down into three processes.
 
 		\subsection{Input}
-			\subsubsection{Arguments}
-				The parsing API uses input in the form of \verb|list[str]|. It does not handle
-				actual program IO, nor does it handle the splitting of the input lines. This
-				input type is derived from the return type of \verb|str.split()|, which is
-				used to split user input by a specified delimiter. From now on, the term
-				``arguments'' will be used to refer to user input with type \verb|list[str]|
-				given to the parsing API\@.
+			The parsing API uses input in the form of \verb|list[str]|. It does not handle
+			actual program IO, nor does it handle the splitting of the input lines. This
+			input type is derived from the return type of \verb|str.split()|, which is
+			used to split user input by a specified delimiter. From now on, the term
+			``arguments'' will be used to refer to user input with type \verb|list[str]|
+			given to the parsing API\@.
 
-			\subsubsection{Rules}
-				A rule determines if an argument is valid. It specifies a list of transforms which
-				contains either types that the argument must be convertible to, or functions of
-				which the argument must be a valid parameters of. In addition, it may also specify
-				a string which the argument must be equal to; this is used to disambiguate between
-				command names. If any one of these were not satisfied, the argument is invalid. A
-				rule is defined with the \verb|ParseRule| dataclass.
+			A rule determines if an argument is valid. It specifies a list of transforms which
+			contains either types that the argument must be convertible to, or functions of
+			which the argument must be a valid parameters of. In addition, it may also specify
+			a string which the argument must be equal to; this is used to disambiguate between
+			command names. If any one of these were not satisfied, the argument is invalid. A
+			rule is defined with the \verb|ParseRule| dataclass.
 
-				Most programs however, take in multiple arguments, thus requiring multiple rules.
-				Rules are simply a \verb|list[ParseRule]|, where each rule has a corresponding
-				argument with the same index. Each element is validated against its corresponding
-				rule. If any one rule is not satisfied, the whole argument list is invalid.
+			Most programs however, take in multiple arguments, thus requiring multiple rules.
+			Rules are simply a \verb|list[ParseRule]|, where each rule has a corresponding
+			argument with the same index. Each element is validated against its corresponding
+			rule. If any one rule is not satisfied, the whole argument list is invalid.
 
-				Here are some examples of rules, and their valid and invalid arguments:
+			Here are some examples of rules, and their valid and invalid arguments:
 
-				\begin{center}
-					\begin{tabular}{|c|c|c|}
-						\hline
-						Rules & Valid & Invalid
-						\\ \hline
-							\verb|int| &
-							\verb|"5"| &
-							\verb|"a"|
-						\\ \hline
-							\verb|int|, \verb|int| &
-							\verb|"5", "10"| &
-							\verb|"5", "a"|
-						\\ \hline
-							\verb|"add", int, int| &
-							\verb|"add", "5", "10"| &
-							\verb|"sub", "5", "10"|
-						\\ \hline
-							\verb|"abs", int| &
-							\verb|"abs", "-5.4"| &
-							\verb|"absv", "-5.4"|
-						\\\hline
-					\end{tabular}
-				\end{center}
+			\begin{center}
+				\begin{tabular}{|c|c|c|}
+					\hline
+					Rules & Valid & Invalid
+					\\ \hline
+						\verb|int| &
+						\verb|"5"| &
+						\verb|"a"|
+					\\ \hline
+						\verb|int|, \verb|int| &
+						\verb|"5", "10"| &
+						\verb|"5", "a"|
+					\\ \hline
+						\verb|"add", int, int| &
+						\verb|"add", "5", "10"| &
+						\verb|"sub", "5", "10"|
+					\\ \hline
+						\verb|"abs", int| &
+						\verb|"abs", "-5.4"| &
+						\verb|"absv", "-5.4"|
+					\\\hline
+				\end{tabular}
+			\end{center}
 
-				If the arguments given to \verb|parse_rules| are invalid, it returns \verb|None|.
+			If the arguments given to \verb|parse_rules| are invalid, it returns \verb|None|.
 
 		\subsection{Output}
 			As said before, rules specify a list of transforms. These transforms are defined
