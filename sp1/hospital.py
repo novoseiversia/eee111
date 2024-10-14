@@ -29,10 +29,14 @@ class CommandType(Enum):
 
 
 @dataclass
+class TransformInfo:
+	convert : type
+	position: int
+
+@dataclass
 class ParseRule:
-	convert        : type | Callable
-	output_position: int
-	find_string    : str | None = None
+	transforms : list[TransformInfo]
+	find_string: str | None = None
 
 
 
@@ -66,7 +70,8 @@ def parse_rules(rules: list[ParseRule], args: list[str]) -> list[Any] | None:
 			return None
 
 		try:
-			parsed[rule.output_position] = rule.convert(arg)
+			for transform in rule.transforms:
+				parsed[transform.position] = transform.convert(arg)
 
 		except:
 			return None
@@ -89,12 +94,12 @@ def parse_rulesets(rulesets: list[list[ParseRule]], args: list[str], default: li
 def parse_args(args: list[str]) -> list[Any]:
 	return parse_rulesets(
 		[
-			[ParseRule(str, 1), ParseRule(CommandType, 0, "needed_now")],
-			[ParseRule(str, 1), ParseRule(CommandType, 0, "needed_in"), ParseRule(int, 2)],
-			[ParseRule(str, 1), ParseRule(CommandType, 0, "runs_out")],
-			[ParseRule(str, 1), ParseRule(int, 2), ParseRule(CommandType, 0, "run_outs")],
-			[ParseRule(CommandType, 0, "help")],
-			[ParseRule(CommandType, 0, "exit")],
+			[ParseRule([TransformInfo(str, 1)]), ParseRule([TransformInfo(CommandType, 0)], "needed_now")],
+			[ParseRule([TransformInfo(str, 1)]), ParseRule([TransformInfo(CommandType, 0)], "needed_in"), ParseRule([TransformInfo(int, 2)])],
+			[ParseRule([TransformInfo(str, 1)]), ParseRule([TransformInfo(CommandType, 0)], "runs_out")],
+			[ParseRule([TransformInfo(str, 1)]), ParseRule([TransformInfo(int, 2)]), ParseRule([TransformInfo(CommandType, 0)], "run_outs")],
+			[ParseRule([TransformInfo(CommandType, 0)], "help")],
+			[ParseRule([TransformInfo(CommandType, 0)], "exit")],
 		],
 		args,
 		[CommandType.INVALID]
@@ -108,7 +113,7 @@ def parse_database(filename: str) -> SupplyDatabase:
 
 	for line in file:
 		if parsed := parse_rules(
-			[ParseRule(str, 0), ParseRule(int, 1), ParseRule(int, 2)],
+			[ParseRule([TransformInfo(str, 0)]), ParseRule([TransformInfo(int, 1)]), ParseRule([TransformInfo(int, 2)])],
 			line.split(",")
 		):
 			name = parsed[0]
