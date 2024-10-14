@@ -161,6 +161,16 @@ def remove_extension(filename: str) -> str:
 
 
 
+def strcmp(l: str, r: str) -> int:
+	if l < r:
+		return -1
+
+	elif l > r:
+		return 1
+
+	else:
+		return 0
+
 def supply_database_compare(l: tuple[str, StockInfo], r: tuple[str, StockInfo]) -> int:
 	l_name, l_info = l
 	r_name, r_info = r
@@ -171,14 +181,7 @@ def supply_database_compare(l: tuple[str, StockInfo], r: tuple[str, StockInfo]) 
 	if (compare_deficit := r_info.deficit - l_info.deficit) != 0:
 		return compare_deficit
 
-	if l_name < r_name:
-		return -1
-
-	elif l_name > r_name:
-		return 1
-
-	else:
-		return 0
+	return strcmp(l_name, r_name)
 
 
 
