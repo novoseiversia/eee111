@@ -3,6 +3,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
+from functools import cmp_to_key
 from math import ceil
 from os import path
 from typing import Any, Callable
@@ -160,12 +161,29 @@ def remove_extension(filename: str) -> str:
 
 
 
-def get_sorted_supply_database(database: SupplyDatabase) -> SortedSupplyDatabase:
-	sort_name    = sorted(database.items(), key=lambda i: i[0])
-	sort_deficit = sorted(sort_name, key=lambda i: i[1].deficit, reverse=True)
-	sort_days    = sorted(sort_deficit, key=lambda i: i[1].remaining_days)
+def supply_database_compare(l: tuple[str, StockInfo], r: tuple[str, StockInfo]) -> int:
+	l_name, l_info = l
+	r_name, r_info = r
 
-	return sort_days
+	if (compare_days := l_info.remaining_days - r_info.remaining_days) != 0:
+		return compare_days
+
+	if (compare_deficit := r_info.deficit - l_info.deficit) != 0:
+		return compare_deficit
+
+	if l_name < r_name:
+		return -1
+
+	elif l_name > r_name:
+		return 1
+
+	else:
+		return 0
+
+
+
+def get_sorted_supply_database(database: SupplyDatabase) -> SortedSupplyDatabase:
+	return sorted(database.items(), key=cmp_to_key(supply_database_compare))
 
 
 
