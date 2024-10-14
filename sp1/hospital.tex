@@ -147,4 +147,36 @@
 			If the arguments given to \verb|parse_rules| are valid, it returns a \verb|list[Any]|
 			of the transformed arguments.
 
+			\subsection{Rulesets}
+			While a rule is for a single argument, and rules are for multiple arguments, rulesets
+			are for multiple commands. A ruleset is simply a \verb|list[list[ParseRule]]|, or a
+			list of lists of rules. Rulesets allow the given arguments to be parsed against
+			multiple different rules, and transforming them against the first rules that
+			successfully validate them. This process is governed by the \verb|parse_rulesets|
+			function.
+
+			For example, given the ruleset
+
+			\begin{center}
+				\item ``add'', int, int
+				\item ``sub'', int, int
+				\item ``abs'', float
+			\end{center}
+
+			and the arguments
+
+			\begin{center}
+				\item ``add'', ``5'', ``8''
+			\end{center}
+
+			the selected rules and its output will be
+
+			\begin{center}
+				\item ``add'', int, int
+				\item ``add'', 5, 8
+			\end{center}
+
+			If no rules successfully validate the arguments, the \verb|default| argument of
+			\verb|parse_rules| is returned.
+
 \end{document}
