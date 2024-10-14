@@ -111,4 +111,36 @@
 				If the arguments given to \verb|parse_rules| are invalid, it returne \verb|None|.
 				If not, it moves on to the next process.
 
+		\subsection{Output}
+			As said before, rules specify a list of transforms. These transforms are defined
+			with the \verb|TransformInfo| dataclass. A transform consists of either a type or
+			a function, and an integer. The argument corresponding to the rule containing the
+			transforms is either converted to the given type or fed into the given function,
+			the results of which are inserted into a list at the index indicated by the given
+			integer.
+
+			Here are some examples of rules with transforms, and their input and outputs:
+
+			\begin{center}
+				\begin{tabular}{c c c}
+					Rules & Input & Output \\
+					\\
+						\{[\{int, 1\}]\}, \{[\{float, 0\}]\}, \{[\{float, 2\}]\} &
+						``10.0'', ``5'', ``6'' &
+						5.0, 10, 2.0
+					\\
+						\{[\{int, 0\}, \{float, 1\}, \{str, 2\}]\} &
+						``94'' &
+						94, 94.0, ``94''
+					\\
+						\{[\{str, 0\}], ``abs''\}, \{[\{float, 1\}]\} &
+						``abs'', ``94'' &
+						``abs'', 94.0
+					\\
+				\end{tabular}
+			\end{center}
+
+			If the arguments given to \verb|parse_rules| are valid, it returns a \verb|list[Any]|
+			of the transformed arguments.
+
 \end{document}
