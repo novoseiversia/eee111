@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from enum import Enum
 from math import ceil
 from os import path
-from typing import Any
+from typing import Any, Callable
 
 
 
@@ -30,7 +30,7 @@ class CommandType(Enum):
 
 @dataclass
 class ParseRule:
-	convert_type   : type
+	convert        : type | Callable
 	output_position: int
 	find_string    : str | None = None
 
@@ -66,7 +66,7 @@ def parse_rules(rules: list[ParseRule], args: list[str]) -> list[Any] | None:
 			return None
 
 		try:
-			parsed[rule.output_position] = rule.convert_type(arg)
+			parsed[rule.output_position] = rule.convert(arg)
 
 		except:
 			return None
