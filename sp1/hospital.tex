@@ -19,7 +19,7 @@
 
 
 
-	\section{Overview}
+	\section{Overview}\label{overview}
 		The program is a CLI supply and inventory monitoring program based on
 		the EEE111 SP1 specifications provided. It accepts the following commands:
 
@@ -272,5 +272,30 @@
 
 			If the input file format is invalid, \verb|parse_database| raises a
 			\verb|RuntimeError|.
+
+		\subsection{Sorting}
+			Since Python does not have a built-in sorted dictionary (unlike C++, with its
+			\verb|std::map|), the \verb|SupplyDatabase| must be manually sorted in order to support
+			some of the commands specified in~\ref{overview}. A custom sorting order is required by
+			the specification:
+
+			\begin{itemize}
+				\item \verb|remaining_days|, in ascending order
+				\item \verb|deficit|, in descending order
+				\item \verb|name|, in ascending lexicographic order
+			\end{itemize}
+
+			In order to sort using this order, a custom comparator is needed. This custom
+			comparator is the \verb|supply_database_compare| function. This comparator function
+			follows the specification or \verb|functools.cmp_to_key|; if the item on the left is
+			less-than, equal, or greater-than the item on the right, the function should return
+			a negative value, zero, or a positive value, respectively.
+
+			The convenience function \verb|sort_supply_database| simply calls \verb|sorted| on
+			the \verb|SupplyDatabase| with \verb|supply_database_compare| as the comparator. The
+			result of this sort is defined by the \verb|SortedSupplyDatabase| alias, which is a
+			list of tuples of the item values. This change in container type is required since
+			the \verb|SupplyDatabase|, which is an underlying \verb|dict|, cannot preserve the
+			order of its elements, and as such cannot be sorted on its own.
 
 \end{document}
