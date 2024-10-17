@@ -209,4 +209,68 @@
 			Note that if no rules successfully validate the arguments, the \verb|default| argument of
 			\verb|parse_rules| is returned.
 
+		\pagebreak
+
+	\section{Database}
+		The database used by this program consists of items, one of which then consists of a name,
+		a quantity, and a daily usage. In order to make database handling simple, an API of one
+		dataclass, two aliases, and three functions were created.
+
+		\begin{verbatim}
+			@dataclass
+			class StockInfo:
+				quantity      : int
+				daily_usage   : int
+				remaining_days: int
+				deficit       : int
+
+			type SupplyDatabase = dict[str, StockInfo]
+			type SortedSupplyDatabase = list[tuple[str, StockInfo]]
+
+			def parse_database(
+				filename: str
+			) -> SupplyDatabase
+
+			def supply_database_compare(
+				left: tuple[str, StockInfo],
+				right: tuple[str, StockInfo]
+			) -> int
+
+			def sort_supply_database(
+				database: SupplyDatabase
+			) -> SortedSupplyDatabase
+		\end{verbatim}
+
+		This API can be broken down into two parts.
+
+		\subsection{Database formats}
+			The parsed format of the database is defined by the \verb|SupplyDatabase| alias. This
+			alias is dictinary consisting of an \verb|str| key corresponding to the item name and a
+			\verb|StockInfo| value which includes the remaining two item values, as well as another
+			two computed values:
+
+			\begin{itemize}
+				\item \verb|remaining_days| is how many days it will take for the stock of the item
+				to run out, given the daily usage.
+				\item \verb|deficit| is how much of the item should be acquired in order to satisfy
+				the shortage on the day it runs out.
+			\end{itemize}
+
+			The input format of the database is a comma-separated values (CSV) file with a variable
+			amount of rows corresponding to each item, and three columns corresponding to each item
+			value.
+
+			The conversion from the input format into the parsed format of the database is handled
+			by \verb|parse_database|. This function takes in the filename of the input file, parses
+			it, and returns a populated \verb|SupplyDatabase| instance, including the two
+			calculated values. The input file can be parsed by splitting each line using commas as
+			the delimiter, then using \verb|parse_args| with the rules
+
+			\begin{center}
+				\verb|{[{str, 0}]}, {[{int, 1}]}, {[{int, 2}]}|
+			\end{center}
+
+			If the input file format is invalid, \verb|parse_database| raises a
+			\verb|RuntimeError|.
+
 \end{document}
