@@ -44,7 +44,7 @@
 	\section{Parsing}
 		Parsing utilities were created in order to simplify parsing inputs. This eliminates the
 		need for long if-elif-else chains and complicated string comparisons, and instead
-		abstracts them into an easy-to-use API\@. This API consists of two dataclasses and
+		abstracts them into an easy-to-use library. This library consists of two dataclasses and
 		two functions:
 
 		\begin{verbatim}
@@ -70,7 +70,7 @@
 			) -> list[Any]:
 		\end{verbatim}
 
-		The inner workings of this API can be broken down into three processes.
+		The inner workings of this library can be broken down into three processes.
 
 		\subsection{Input}
 			The parsing API uses input in the form of \verb|list[str]|. It does not handle
@@ -89,7 +89,7 @@
 
 			Most programs however, take in multiple arguments, thus requiring multiple rules.
 			Rules are simply a \verb|list[ParseRule]|, where each rule has a corresponding
-			argument with the same index. Each element is validated against its corresponding
+			argument with the same index. Each argument is validated against its corresponding
 			rule. If any one rule is not satisfied, the whole argument list is invalid.
 
 			Here are some examples of rules, and their valid and invalid arguments:
@@ -165,7 +165,7 @@
 			of the transformed arguments.
 
 		\subsection{Rulesets}
-			While a rule is for a single argument, and rules are for multiple arguments, rulesets
+			While a rule is for a single argument and rules are for multiple arguments, rulesets
 			are for multiple commands. A ruleset is simply a \verb|list[list[ParseRule]]|, or a
 			list of lists of rules. Rulesets allow the given arguments to be parsed against
 			multiple different rules, and transforming them against the first rules that
@@ -212,9 +212,9 @@
 		\pagebreak
 
 	\section{Database}
-		The database used by this program consists of items, one of which then consists of a name,
-		a quantity, and a daily usage. In order to make database handling simple, an API of one
-		dataclass, two aliases, and three functions were created.
+		The database used by this program consists of items, one of which consists of a name,
+		a quantity, and a daily usage. In order to make database handling simple, a library of one
+		dataclass, two aliases, and three functions was created.
 
 		\begin{verbatim}
 			@dataclass
@@ -241,7 +241,7 @@
 			) -> SortedSupplyDatabase
 		\end{verbatim}
 
-		This API can be broken down into two parts.
+		This library can be broken down into two parts.
 
 		\subsection{Formats}
 			The parsed format of the database is defined by the \verb|SupplyDatabase| alias. This
@@ -296,6 +296,7 @@
 			result of this sort is defined by the \verb|SortedSupplyDatabase| alias, which is a
 			list of tuples of the item values. This change in container type is required since
 			the \verb|SupplyDatabase|, which is simply a \verb|dict|, cannot preserve the order of
-			its elements, and as such cannot be sorted on its own.
+			its elements, and as such cannot be sorted without converting it into a different
+			container that preserves the order of its elements.
 
 \end{document}
