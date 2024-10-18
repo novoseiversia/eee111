@@ -34,8 +34,6 @@ class Item:
 	remaining_days: int
 	deficit       : int
 
-type SupplyDatabase = list[Item]
-
 
 
 def input_list(prompt: str) -> list[str]:
@@ -76,9 +74,9 @@ def try_commandspecs(specs: list[CommandSpec], command: list[str], default: Call
 
 
 
-def parse_database(filename: str) -> SupplyDatabase:
+def parse_database(filename: str) -> list[Item]:
 	file = open(filename, "r")
-	database: SupplyDatabase = []
+	database: list[Item] = []
 
 	for line in file:
 		if parsed := parse_rules(
@@ -124,12 +122,12 @@ def supply_database_compare(left: Item, right: Item) -> int:
 
 	return strcmp(left.name, right.name)
 
-def sort_supply_database(database: SupplyDatabase) -> SupplyDatabase:
+def sort_supply_database(database: list[Item]) -> list[Item]:
 	return sorted(database, key=cmp_to_key(supply_database_compare))
 
 
 
-def needed_now(database: SupplyDatabase, name: str) -> bool:
+def needed_now(database: list[Item], name: str) -> bool:
 	print(f"Needed Items now for { name }:")
 
 	for item in database:
@@ -141,7 +139,7 @@ def needed_now(database: SupplyDatabase, name: str) -> bool:
 
 	return True
 
-def needed_in(database: SupplyDatabase, name: str, x: int) -> bool:
+def needed_in(database: list[Item], name: str, x: int) -> bool:
 	print(f"Needed Items in { x } day/s for { name }:")
 
 	for item in database:
@@ -154,7 +152,7 @@ def needed_in(database: SupplyDatabase, name: str, x: int) -> bool:
 
 	return True
 
-def runs_out(database: SupplyDatabase, name: str) -> bool:
+def runs_out(database: list[Item], name: str) -> bool:
 	print(f"For { name }:")
 
 	sorted_database = sort_supply_database(database)
@@ -163,7 +161,7 @@ def runs_out(database: SupplyDatabase, name: str) -> bool:
 
 	return True
 
-def run_outs(database: SupplyDatabase, name: str, n: int) -> bool:
+def run_outs(database: list[Item], name: str, n: int) -> bool:
 	print(f"For { name }:")
 
 	sorted_database = sort_supply_database(database)
