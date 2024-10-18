@@ -43,8 +43,8 @@ def input_list(prompt: str) -> list[str]:
 
 
 
-def parse_rules(rules: list[Rule], args: list[str]) -> list[Any] | None:
-	if len(args) != len(rules):
+def parse_rules(rules: list[Rule], command: list[str]) -> list[Any] | None:
+	if len(command) != len(rules):
 		return None
 
 	outputs = 0
@@ -53,7 +53,7 @@ def parse_rules(rules: list[Rule], args: list[str]) -> list[Any] | None:
 
 	parsed: list[Any] = [None] * outputs
 
-	for rule, arg in zip(rules, args):
+	for rule, arg in zip(rules, command):
 		if rule.find_string != None and rule.find_string != arg:
 			return None
 
@@ -66,10 +66,10 @@ def parse_rules(rules: list[Rule], args: list[str]) -> list[Any] | None:
 
 	return parsed
 
-def try_commandspecs(specs: list[CommandSpec], args: list[str], default: Callable[[], bool]) -> bool:
+def try_commandspecs(specs: list[CommandSpec], command: list[str], default: Callable[[], bool]) -> bool:
 	for spec in specs:
 
-		if (parsed := parse_rules(spec.rules, args)) != None:
+		if (parsed := parse_rules(spec.rules, command)) != None:
 			return spec.callback(parsed)
 
 	return default()
@@ -206,7 +206,7 @@ def help_string(info: str | None = None) -> bool:
 
 
 
-def	run_command(args: list[str]) -> bool:
+def	run_command(command: list[str]) -> bool:
 	return try_commandspecs(
 		[
 			CommandSpec(
@@ -257,7 +257,7 @@ def	run_command(args: list[str]) -> bool:
 				lambda _: False
 			)
 		],
-		args,
+		command,
 		lambda: help_string("Invalid arguments provided.")
 	)
 
