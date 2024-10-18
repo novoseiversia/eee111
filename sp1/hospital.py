@@ -2,30 +2,10 @@
 # SPDX-License-Identifier: 0BSD
 
 from dataclasses import dataclass
-from enum import Enum
 from functools import cmp_to_key
 from math import ceil
 from os import path
 from typing import Any, Callable
-
-
-
-class CommandType(Enum):
-	NEEDED_NOW =  0,
-	NEEDED_IN  =  1,
-	RUNS_OUT   =  2,
-	RUN_OUTS   =  3,
-	HELP       =  4,
-	EXIT       =  5,
-	INVALID    = -1,
-
-	@classmethod
-	def _missing_(cls, value: object) -> Any:
-		value = str(value).upper()
-		for member in cls:
-			if member.name == value:
-				return member
-		return cls.INVALID
 
 
 
@@ -38,6 +18,11 @@ class Transform:
 class Rule:
 	transforms : list[Transform]
 	find_string: str | None = None
+
+@dataclass
+class CommandSpec:
+	ruleset : list[Rule]
+	callback: Callable[[list[Any]], bool]
 
 
 
@@ -81,45 +66,13 @@ def parse_ruleset(ruleset: list[Rule], args: list[str]) -> list[Any] | None:
 
 	return parsed
 
-def parse_rulesetlist(rulesetlist: list[list[Rule]], args: list[str], default: list[Any]) -> list[Any]:
-	for ruleset in rulesetlist:
+def try_commandspecs(specs: list[CommandSpec], args: list[str], default: Callable[[], bool]) -> bool:
+	for spec in specs:
 
-		if parsed := parse_ruleset(ruleset, args):
-			return parsed
+		if (parsed := parse_ruleset(spec.ruleset, args)) != None:
+			return spec.callback(parsed)
 
-	return default
-
-def parse_args(args: list[str]) -> list[Any]:
-	return parse_rulesetlist(
-		[
-			[
-				Rule([Transform(parse_database, 1), Transform(remove_extension, 2)]),
-				Rule([Transform(CommandType, 0)], "needed_now")
-			],
-			[
-				Rule([Transform(parse_database, 1), Transform(remove_extension, 2)]),
-				Rule([Transform(CommandType, 0)], "needed_in"),
-				Rule([Transform(int, 3)])
-			],
-			[
-				Rule([Transform(parse_database, 1), Transform(remove_extension, 2)]),
-				Rule([Transform(CommandType, 0)], "runs_out")
-			],
-			[
-				Rule([Transform(parse_database, 1), Transform(remove_extension, 2)]),
-				Rule([Transform(int, 3)]),
-				Rule([Transform(CommandType, 0)], "run_outs")
-			],
-			[
-				Rule([Transform(CommandType, 0)], "help")
-			],
-			[
-				Rule([Transform(CommandType, 0)], "exit")
-			],
-		],
-		args,
-		[CommandType.INVALID]
-	)
+	return default()
 
 
 
@@ -176,9 +129,9 @@ def sort_supply_database(database: SupplyDatabase) -> SupplyDatabase:
 
 
 
-def needed_now(args: list[Any]) -> None:
-	database = args[1]
-	name = args[2]
+def needed_now(args: list[Any]) -> bool:
+	database = args[0]
+	name = args[1]
 
 	print(f"Needed Items now for { name }:")
 
@@ -189,10 +142,12 @@ def needed_now(args: list[Any]) -> None:
 		else:
 			print(f"{ item.daily_usage - item.quantity } x { item.name }")
 
-def needed_in(args: list[Any]) -> None:
-	database = args[1]
-	name = args[2]
-	x = args[3]
+	return True
+
+def needed_in(args: list[Any]) -> bool:
+	database = args[0]
+	name = args[1]
+	x = args[2]
 
 	print(f"Needed Items in { x } day/s for { name }:")
 
@@ -204,9 +159,11 @@ def needed_in(args: list[Any]) -> None:
 		else:
 			print(f"{ needed - item.quantity } x { item.name }")
 
-def runs_out(args: list[Any]) -> None:
-	database = args[1]
-	name = args[2]
+	return True
+
+def runs_out(args: list[Any]) -> bool:
+	database = args[0]
+	name = args[1]
 
 	print(f"For { name }:")
 
@@ -214,10 +171,12 @@ def runs_out(args: list[Any]) -> None:
 	item = sorted_database[0]
 	print(f"{ item.name } will run out in { item.remaining_days } day/s")
 
-def run_outs(args: list[Any]) -> None:
-	database = args[1]
-	name = args[2]
-	n = args[3]
+	return True
+
+def run_outs(args: list[Any]) -> bool:
+	database = args[0]
+	name = args[1]
+	n = args[2]
 
 	print(f"For { name }:")
 
@@ -225,7 +184,9 @@ def run_outs(args: list[Any]) -> None:
 	for item in sorted_database[:n]:
 		print(f"{ item.name } will run out in { item.remaining_days } day/s")
 
-def help_string(info: str | None = None) -> None:
+	return True
+
+def help_string(info: str | None = None) -> bool:
 	if info != None:
 		info += "\n"
 
@@ -241,38 +202,70 @@ def help_string(info: str | None = None) -> None:
 	exit                              Exits the program."""
 	)
 
-
-
-def run_command(args: list[Any]) -> bool:
-	match args[0]:
-		case CommandType.NEEDED_NOW:
-			needed_now(args)
-
-		case CommandType.NEEDED_IN:
-			needed_in(args)
-
-		case CommandType.RUNS_OUT:
-			runs_out(args)
-
-		case CommandType.RUN_OUTS:
-			run_outs(args)
-
-		case CommandType.HELP:
-			help_string()
-
-		case CommandType.EXIT:
-			return False
-
-		case _:
-			help_string("Invalid arguments provided.")
-
 	return True
+
+
+
+def	run_command(args: list[str]) -> bool:
+	return try_commandspecs(
+		[
+			CommandSpec(
+				[
+					Rule([Transform(parse_database, 0), Transform(remove_extension, 1)]),
+					Rule([], "needed_now")
+				],
+				needed_now
+			),
+
+			CommandSpec(
+				[
+					Rule([Transform(parse_database, 0), Transform(remove_extension, 1)]),
+					Rule([], "needed_in"),
+					Rule([Transform(int, 2)])
+				],
+				needed_in
+			),
+
+			CommandSpec(
+				[
+					Rule([Transform(parse_database, 0), Transform(remove_extension, 1)]),
+					Rule([], "runs_out")
+				],
+				runs_out
+			),
+
+			CommandSpec(
+				[
+					Rule([Transform(parse_database, 0), Transform(remove_extension, 1)]),
+					Rule([Transform(int, 2)]),
+					Rule([], "run_outs")
+				],
+				run_outs
+			),
+
+			CommandSpec(
+				[
+					Rule([], "help")
+				],
+				lambda _: help_string()
+			),
+
+			CommandSpec(
+				[
+					Rule([], "exit")
+				],
+				lambda _: False
+			)
+		],
+		args,
+		lambda: help_string("Invalid arguments provided.")
+	)
 
 
 
 def __main__():
 	while True:
-		args = parse_args(input_list(""))
+		args = input_list("")
 
 		try:
 			if not run_command(args):
