@@ -268,7 +268,7 @@ def __main__():
 		args = input_list("")
 
 		try:
-			if not run_command(args):
+			if run_command(args) == False:
 				return
 
 		except Exception as e:
