@@ -266,7 +266,7 @@ def	run_command(args: list[str]) -> bool:
 def __main__():
 	while True:
 		try:
-			if run_command(input_list("")) == False:
+			if run_command(input_list("> ")) == False:
 				return
 
 		except Exception as e:
