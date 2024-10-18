@@ -22,7 +22,7 @@ class Rule:
 @dataclass
 class CommandSpec:
 	rules   : list[Rule]
-	callback: Callable[[list[Any]], bool]
+	callback: Callable[..., bool]
 
 
 
@@ -70,7 +70,7 @@ def try_commandspecs(specs: list[CommandSpec], command: list[str], default: Call
 	for spec in specs:
 
 		if (parsed := parse_rules(spec.rules, command)) != None:
-			return spec.callback(parsed)
+			return spec.callback(*parsed)
 
 	return default()
 
@@ -129,10 +129,7 @@ def sort_supply_database(database: SupplyDatabase) -> SupplyDatabase:
 
 
 
-def needed_now(args: list[Any]) -> bool:
-	database = args[0]
-	name = args[1]
-
+def needed_now(database: SupplyDatabase, name: str) -> bool:
 	print(f"Needed Items now for { name }:")
 
 	for item in database:
@@ -144,11 +141,7 @@ def needed_now(args: list[Any]) -> bool:
 
 	return True
 
-def needed_in(args: list[Any]) -> bool:
-	database = args[0]
-	name = args[1]
-	x = args[2]
-
+def needed_in(database: SupplyDatabase, name: str, x: int) -> bool:
 	print(f"Needed Items in { x } day/s for { name }:")
 
 	for item in database:
@@ -161,10 +154,7 @@ def needed_in(args: list[Any]) -> bool:
 
 	return True
 
-def runs_out(args: list[Any]) -> bool:
-	database = args[0]
-	name = args[1]
-
+def runs_out(database: SupplyDatabase, name: str) -> bool:
 	print(f"For { name }:")
 
 	sorted_database = sort_supply_database(database)
@@ -173,11 +163,7 @@ def runs_out(args: list[Any]) -> bool:
 
 	return True
 
-def run_outs(args: list[Any]) -> bool:
-	database = args[0]
-	name = args[1]
-	n = args[2]
-
+def run_outs(database: SupplyDatabase, name: str, n: int) -> bool:
 	print(f"For { name }:")
 
 	sorted_database = sort_supply_database(database)
@@ -247,14 +233,14 @@ def	run_command(command: list[str]) -> bool:
 				[
 					Rule([], "help")
 				],
-				lambda _: help_string()
+				lambda: help_string()
 			),
 
 			CommandSpec(
 				[
 					Rule([], "exit")
 				],
-				lambda _: False
+				lambda: False
 			)
 		],
 		command,
