@@ -21,7 +21,7 @@ class Rule:
 
 @dataclass
 class CommandSpec:
-	ruleset : list[Rule]
+	rules   : list[Rule]
 	callback: Callable[[list[Any]], bool]
 
 
@@ -43,17 +43,17 @@ def input_list(prompt: str) -> list[str]:
 
 
 
-def parse_ruleset(ruleset: list[Rule], args: list[str]) -> list[Any] | None:
-	if len(args) != len(ruleset):
+def parse_rules(rules: list[Rule], args: list[str]) -> list[Any] | None:
+	if len(args) != len(rules):
 		return None
 
 	outputs = 0
-	for rule in ruleset:
+	for rule in rules:
 		outputs += len(rule.transforms)
 
 	parsed: list[Any] = [None] * outputs
 
-	for rule, arg in zip(ruleset, args):
+	for rule, arg in zip(rules, args):
 		if rule.find_string != None and rule.find_string != arg:
 			return None
 
@@ -69,7 +69,7 @@ def parse_ruleset(ruleset: list[Rule], args: list[str]) -> list[Any] | None:
 def try_commandspecs(specs: list[CommandSpec], args: list[str], default: Callable[[], bool]) -> bool:
 	for spec in specs:
 
-		if (parsed := parse_ruleset(spec.ruleset, args)) != None:
+		if (parsed := parse_rules(spec.rules, args)) != None:
 			return spec.callback(parsed)
 
 	return default()
@@ -81,7 +81,7 @@ def parse_database(filename: str) -> SupplyDatabase:
 	database: SupplyDatabase = []
 
 	for line in file:
-		if parsed := parse_ruleset(
+		if parsed := parse_rules(
 			[Rule([Transform(str, 0)]), Rule([Transform(int, 1)]), Rule([Transform(int, 2)])],
 			line.split(",")
 		):
