@@ -58,17 +58,17 @@ def input_list(prompt: str) -> list[str]:
 
 
 
-def parse_rules(rules: list[Rule], args: list[str]) -> list[Any] | None:
-	if len(args) != len(rules):
+def parse_ruleset(ruleset: list[Rule], args: list[str]) -> list[Any] | None:
+	if len(args) != len(ruleset):
 		return None
 
 	outputs = 0
-	for rule in rules:
+	for rule in ruleset:
 		outputs += len(rule.transforms)
 
 	parsed: list[Any] = [None] * outputs
 
-	for rule, arg in zip(rules, args):
+	for rule, arg in zip(ruleset, args):
 		if rule.find_string != None and rule.find_string != arg:
 			return None
 
@@ -81,16 +81,16 @@ def parse_rules(rules: list[Rule], args: list[str]) -> list[Any] | None:
 
 	return parsed
 
-def parse_rulesets(rulesets: list[list[Rule]], args: list[str], default: list[Any]) -> list[Any]:
-	for rules in rulesets:
+def parse_rulesetlist(rulesetlist: list[list[Rule]], args: list[str], default: list[Any]) -> list[Any]:
+	for ruleset in rulesetlist:
 
-		if parsed := parse_rules(rules, args):
+		if parsed := parse_ruleset(ruleset, args):
 			return parsed
 
 	return default
 
 def parse_args(args: list[str]) -> list[Any]:
-	return parse_rulesets(
+	return parse_rulesetlist(
 		[
 			[
 				Rule([Transform(parse_database, 1), Transform(remove_extension, 2)]),
@@ -128,7 +128,7 @@ def parse_database(filename: str) -> SupplyDatabase:
 	database: SupplyDatabase = {}
 
 	for line in file:
-		if parsed := parse_rules(
+		if parsed := parse_ruleset(
 			[Rule([Transform(str, 0)]), Rule([Transform(int, 1)]), Rule([Transform(int, 2)])],
 			line.split(",")
 		):
