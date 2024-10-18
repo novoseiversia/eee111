@@ -30,26 +30,26 @@ class CommandType(Enum):
 
 
 @dataclass
-class TransformInfo:
+class Transform:
 	convert : type | Callable
 	position: int
 
 @dataclass
-class ParseRule:
-	transforms : list[TransformInfo]
+class Rule:
+	transforms : list[Transform]
 	find_string: str | None = None
 
 
 
 @dataclass
-class StockInfo:
+class Item:
 	quantity      : int
 	daily_usage   : int
 	remaining_days: int
 	deficit       : int
 
-type SupplyDatabase = dict[str, StockInfo]
-type SortedSupplyDatabase = list[tuple[str, StockInfo]]
+type SupplyDatabase = dict[str, Item]
+type SortedSupplyDatabase = list[tuple[str, Item]]
 
 
 
@@ -58,7 +58,7 @@ def input_list(prompt: str) -> list[str]:
 
 
 
-def parse_rules(rules: list[ParseRule], args: list[str]) -> list[Any] | None:
+def parse_rules(rules: list[Rule], args: list[str]) -> list[Any] | None:
 	if len(args) != len(rules):
 		return None
 
@@ -81,7 +81,7 @@ def parse_rules(rules: list[ParseRule], args: list[str]) -> list[Any] | None:
 
 	return parsed
 
-def parse_rulesets(rulesets: list[list[ParseRule]], args: list[str], default: list[Any]) -> list[Any]:
+def parse_rulesets(rulesets: list[list[Rule]], args: list[str], default: list[Any]) -> list[Any]:
 	for rules in rulesets:
 
 		if parsed := parse_rules(rules, args):
@@ -93,28 +93,28 @@ def parse_args(args: list[str]) -> list[Any]:
 	return parse_rulesets(
 		[
 			[
-				ParseRule([TransformInfo(parse_database, 1), TransformInfo(remove_extension, 2)]),
-				ParseRule([TransformInfo(CommandType, 0)], "needed_now")
+				Rule([Transform(parse_database, 1), Transform(remove_extension, 2)]),
+				Rule([Transform(CommandType, 0)], "needed_now")
 			],
 			[
-				ParseRule([TransformInfo(parse_database, 1), TransformInfo(remove_extension, 2)]),
-				ParseRule([TransformInfo(CommandType, 0)], "needed_in"),
-				ParseRule([TransformInfo(int, 3)])
+				Rule([Transform(parse_database, 1), Transform(remove_extension, 2)]),
+				Rule([Transform(CommandType, 0)], "needed_in"),
+				Rule([Transform(int, 3)])
 			],
 			[
-				ParseRule([TransformInfo(parse_database, 1), TransformInfo(remove_extension, 2)]),
-				ParseRule([TransformInfo(CommandType, 0)], "runs_out")
+				Rule([Transform(parse_database, 1), Transform(remove_extension, 2)]),
+				Rule([Transform(CommandType, 0)], "runs_out")
 			],
 			[
-				ParseRule([TransformInfo(parse_database, 1), TransformInfo(remove_extension, 2)]),
-				ParseRule([TransformInfo(int, 3)]),
-				ParseRule([TransformInfo(CommandType, 0)], "run_outs")
+				Rule([Transform(parse_database, 1), Transform(remove_extension, 2)]),
+				Rule([Transform(int, 3)]),
+				Rule([Transform(CommandType, 0)], "run_outs")
 			],
 			[
-				ParseRule([TransformInfo(CommandType, 0)], "help")
+				Rule([Transform(CommandType, 0)], "help")
 			],
 			[
-				ParseRule([TransformInfo(CommandType, 0)], "exit")
+				Rule([Transform(CommandType, 0)], "exit")
 			],
 		],
 		args,
@@ -129,7 +129,7 @@ def parse_database(filename: str) -> SupplyDatabase:
 
 	for line in file:
 		if parsed := parse_rules(
-			[ParseRule([TransformInfo(str, 0)]), ParseRule([TransformInfo(int, 1)]), ParseRule([TransformInfo(int, 2)])],
+			[Rule([Transform(str, 0)]), Rule([Transform(int, 1)]), Rule([Transform(int, 2)])],
 			line.split(",")
 		):
 			name = parsed[0]
@@ -138,7 +138,7 @@ def parse_database(filename: str) -> SupplyDatabase:
 			remaining_days = ceil(quantity / daily_usage)
 			deficit = daily_usage * remaining_days - quantity
 
-			database[name] = StockInfo(quantity, daily_usage, remaining_days, deficit)
+			database[name] = Item(quantity, daily_usage, remaining_days, deficit)
 
 		else:
 			raise RuntimeError("Invalid hospital supply database format.")
@@ -161,7 +161,7 @@ def strcmp(left: str, right: str) -> int:
 	else:
 		return 0
 
-def supply_database_compare(left: tuple[str, StockInfo], right: tuple[str, StockInfo]) -> int:
+def supply_database_compare(left: tuple[str, Item], right: tuple[str, Item]) -> int:
 	left_name, left_info = left
 	right_name, right_info = right
 
