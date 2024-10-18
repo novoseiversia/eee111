@@ -265,10 +265,8 @@ def	run_command(args: list[str]) -> bool:
 
 def __main__():
 	while True:
-		args = input_list("")
-
 		try:
-			if run_command(args) == False:
+			if run_command(input_list("")) == False:
 				return
 
 		except Exception as e:
