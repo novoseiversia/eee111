@@ -4,7 +4,7 @@
 
 
 def pascal_nthline(n: int) -> list[int]:
-	if n == 1:
+	if n == 0:
 		return [1]
 
 	last = pascal_nthline(n - 1)
