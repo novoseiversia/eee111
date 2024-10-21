@@ -45,8 +45,6 @@ def ndigit_binary_even0_odd1z(n: int, z: int) -> list[str]:
 def ndigit_binary_even0_odd1(n: int) -> list[str]:
 	if n % 2 == 0:
 		return []
-	if n == 1:
-		return ["1"]
 
 	out = []
 	for b in ndigit_binary_even0_odd1z(n, n - 1):
@@ -57,6 +55,5 @@ def ndigit_binary_even0_odd1(n: int) -> list[str]:
 
 
 n = int(input("> "))
-print(len(ndigit_binary_even0_odd1(n)))
 for b in ndigit_binary_even0_odd1(n):
 	print(b)
