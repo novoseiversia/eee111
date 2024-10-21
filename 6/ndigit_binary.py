@@ -16,4 +16,24 @@ def ndigit_binary(n: int) -> list[str]:
 
 
 
-print(ndigit_binary(int(input())))
+def ndigit_binary_z(n: int, z: int) -> list[str]:
+	if n == 1:
+		if z == 0:
+			return ["1"]
+		elif z == 1:
+			return ["0"]
+		else:
+			return []
+
+	out = []
+	for b in ndigit_binary_z(n - 1, z):
+		out.append(b + "1")
+
+	for b in ndigit_binary_z(n - 1, z - 1):
+		out.append(b + "0")
+
+	return out
+
+n = int(input("> "))
+z = int(input("> "))
+print(ndigit_binary_z(n, z))
