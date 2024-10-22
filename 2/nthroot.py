@@ -1,21 +1,18 @@
 # SPDX-FileCopyrightText: Copyright (C) Nile Jocson <novoseiversia@gmail.com>
 # SPDX-License-Identifier: 0BSD
 
-from typing import Optional
 
 
-
-def input_float(prompt: str, *, noexcept: bool = False) -> Optional[float]:
+def input_float_none(prompt: str, *, none: bool = False) -> float | None:
 	while True:
 		try:
 			parsed = float(input(prompt))
 		except ValueError:
-			if noexcept:
+			if none:
 				return None
 			print("Please enter a valid number.")
 		else:
 			return parsed
-
 
 
 
@@ -24,8 +21,8 @@ def nthroot(x: float, n: float = 2) -> float:
 
 
 
-x = input_float("Input x: ")
-n = input_float("Input n (default: 2): ", noexcept = True)
+x = input_float_none("Input x: ")
+n = input_float_none("Input n (default: 2): ", none = True)
 
 print("")
 
