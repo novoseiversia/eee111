@@ -35,7 +35,7 @@ def ndigit_binary_z(n: int, z: int) -> list[str]:
 
 
 n = input_int("Input n: ")
-z = input_int("Input n: ")
+z = input_int("Input z: ")
 
 print(f"All { n }-digit binary numbers with { z } zero/es:")
 for b in ndigit_binary_z(n, z):
