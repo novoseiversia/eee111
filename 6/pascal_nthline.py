@@ -3,6 +3,17 @@
 
 
 
+def input_int(prompt: str) -> int:
+	while True:
+		try:
+			parsed = int(input(prompt))
+		except ValueError:
+			print("Please enter a valid integer.")
+		else:
+			return parsed
+
+
+
 def pascal_nthline(n: int) -> list[int]:
 	if n == 0:
 		return [1]
@@ -19,4 +30,7 @@ def pascal_nthline(n: int) -> list[int]:
 
 
 
-print(pascal_nthline(int(input())))
+n = input_int("Input n: ")
+
+for x in pascal_nthline(n):
+	print(x, end = " ")
