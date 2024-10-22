@@ -3,7 +3,7 @@
 
 
 
-def input_int(prompt: str, *, noexcept: bool = False) -> int:
+def input_int(prompt: str, *, noexcept: bool = False) -> int | None:
 	while True:
 		try:
 			parsed = int(input(prompt))
@@ -36,5 +36,6 @@ def nprimes(n: int) -> list[int]:
 
 n = input_int("Input n: ")
 
-print("")
-print(f"First { n } primes: { nprimes(n) }")
+if n != None:
+	print("")
+	print(f"First { n } primes: { nprimes(n) }")
