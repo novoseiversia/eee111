@@ -3,13 +3,11 @@
 
 
 
-def input_int(prompt: str, *, noexcept: bool = False) -> int | None:
+def input_int(prompt: str) -> int:
 	while True:
 		try:
 			parsed = int(input(prompt))
 		except ValueError:
-			if noexcept:
-				return None
 			print("Please enter a valid integer.")
 		else:
 			return parsed
