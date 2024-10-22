@@ -36,21 +36,15 @@ def ndigit_binary_z(n: int, z: int) -> list[str]:
 
 
 
-def ndigit_binary_even0_odd1z(n: int, z: int) -> list[str]:
+def ndigit_binary_even0_odd1(n: int, z: int | None = None) -> list[str]:
+	if n % 2 == 0:
+		return []
+	if z == None:
+		return ndigit_binary_even0_odd1(n, n - 1)
 	if z == 0:
 		return ndigit_binary_z(n, 0)
 
-	return ndigit_binary_z(n, z) + ndigit_binary_even0_odd1z(n, z - 2)
-
-def ndigit_binary_even0_odd1(n: int) -> list[str]:
-	if n % 2 == 0:
-		return []
-
-	out: list[str] = []
-	for b in ndigit_binary_even0_odd1z(n, n - 1):
-		out.append(b)
-
-	return out
+	return ndigit_binary_z(n, z) + ndigit_binary_even0_odd1(n, z - 2)
 
 
 
