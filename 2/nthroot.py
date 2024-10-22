@@ -28,8 +28,6 @@ print("")
 
 if x != None:
 	if n == None:
-		root = nthroot(x)
-		print(f"root({ x }) = { root }")
+		print(f"root({ x }) = { nthroot(x) }")
 	else:
-		root = nthroot(x, n)
-		print(f"root({ x }, { n }) = { root }")
+		print(f"root({ x }, { n }) = { nthroot(x, n) }")
